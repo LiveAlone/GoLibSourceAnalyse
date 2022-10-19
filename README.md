@@ -14,3 +14,5 @@ go mod init
 
 1. util 工具模板测试
 2. leetcode 算法编辑
+3. lib java 类库相关基础
+4. etc
