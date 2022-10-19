@@ -1,10 +1,11 @@
-package template
+package util
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/emirpasic/gods/lists/arraylist"
 	"github.com/emirpasic/gods/sets/hashset"
-	"testing"
 )
 
 func TestNone(t *testing.T) {
@@ -19,4 +20,5 @@ func TestSet(t *testing.T) {
 	set.Add(123, 12, 345)
 	set.Add(12, 34, 56)
 	fmt.Println(set)
+
 }
