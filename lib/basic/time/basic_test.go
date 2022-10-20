@@ -59,14 +59,14 @@ func TestLocation(t *testing.T) {
 }
 
 func TestTimeNowParse(t *testing.T) {
-	cur := time.Now()
-	fmt.Println(cur)
-	fmt.Println(cur.Location())
+	//cur := time.Now()
+	//fmt.Println(cur)
+	//fmt.Println(cur.Location())
 
-	//start := time.Now()
-	//time.Sleep(time.Second)
-	//end := time.Now()
-	//fmt.Println(end.Sub(start))
+	start := time.Now()
+	time.Sleep(time.Second)
+	end := time.Now()
+	fmt.Println(end.Sub(start))
 
 	//time := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 	//fmt.Printf("Go launched at %s\n", time.Local())
@@ -120,6 +120,6 @@ func TestTimeNowParse(t *testing.T) {
 	//	fmt.Printf("d.Round(%6s) = %s\n", r, d.Round(r).String())
 	//}
 
-	td := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
-	fmt.Printf("Go launched at %s\n", td.Local())
+	//td := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
+	//fmt.Printf("Go launched at %s\n", td.Local())
 }
