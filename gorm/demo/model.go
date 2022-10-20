@@ -1,10 +1,8 @@
-package gorm
+package demo
 
 import (
-	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"testing"
 	"time"
 )
 
@@ -36,39 +34,7 @@ type DBMonitorRecord struct {
 }
 
 // const hxxMisQa = "homework:homework@tcp(10.112.36.52:6060)/hxx_mis_qa?parseTime=true"
-const hxxMis = "homework:homework@tcp(10.112.36.52:6060)/hxx_mis?parseTime=true"
-
-func TestDbAction(t *testing.T) {
-	db, err := buildDb(hxxMis)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	// create table
-	//db.Table(DBMonitorTaskName).Create(&DBMonitorTask{
-	//	DBId:     1,
-	//	DBName:   "test",
-	//	Schedule: 20,
-	//	Tables:   "*",
-	//	Action:   1,
-	//	Status:   1,
-	//})
-
-	// read
-	var task DBMonitorTask
-	//db.Table(DBMonitorTaskName).First(&task)
-	db.Table(DBMonitorTaskName).First(&task, 2)
-	fmt.Println(task.CreatedAt.Local())
-
-	//update
-	//db.Table(DBMonitorTaskName).Model(&task).Update("db_name", "hello")
-	//db.Table(DBMonitorTaskName).Model(&task).Updates(&DBMonitorTask{DBName: "hello3", Status: 4})
-	//db.Table(DBMonitorTaskName).Model(&task).Updates(map[string]interface{}{"DBName": "world3", "status": 6})
-
-	//delete
-	db.Table(DBMonitorTaskName).Delete(&task)
-}
+const hxxMis = "homework:homework@tcp(10.112.36.52:6060)/hxx_mis?charset=utf8mb4&parseTime=True&loc=Local"
 
 func buildDb(url string) (*gorm.DB, error) {
 	db, err := gorm.Open(mysql.Open(url), &gorm.Config{})
