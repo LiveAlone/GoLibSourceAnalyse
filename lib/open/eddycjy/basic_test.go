@@ -33,3 +33,22 @@ func TestPrintNil(t *testing.T) {
 	var et T
 	fmt.Println(et.Hello())
 }
+
+type Person struct {
+	Nane string
+	Age  int
+}
+
+func TestPersonList(t *testing.T) {
+	p := []Person{
+		{Nane: "yao", Age: 18},
+		{Nane: "qi", Age: 19},
+		{Nane: "jun", Age: 20},
+	}
+
+	fmt.Println(p)
+	for i := 0; i < len(p); i++ {
+		p[i].Age = 200
+	}
+	fmt.Println(p)
+}
