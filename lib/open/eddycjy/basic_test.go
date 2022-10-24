@@ -40,15 +40,16 @@ type Person struct {
 }
 
 func TestPersonList(t *testing.T) {
-	p := []Person{
-		{Nane: "yao", Age: 18},
-		{Nane: "qi", Age: 19},
-		{Nane: "jun", Age: 20},
-	}
+	//p := []Person{
+	//	{Nane: "yao", Age: 18},
+	//	{Nane: "qi", Age: 19},
+	//	{Nane: "jun", Age: 20},
+	//}
 
-	fmt.Println(p)
-	for i := 0; i < len(p); i++ {
-		p[i].Age = 200
-	}
-	fmt.Println(p)
+	//fmt.Println(p)
+	// for range 不会修改实体对象
+	//for i := 0; i < len(p); i++ {
+	//	p[i].Age = 200
+	//}
+	//fmt.Println(p)
 }
