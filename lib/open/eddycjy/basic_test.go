@@ -34,6 +34,7 @@ func TestPrintNil(t *testing.T) {
 	fmt.Println(et.Hello())
 }
 
+<<<<<<< HEAD
 type Person struct {
 	Nane string
 	Age  int
