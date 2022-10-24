@@ -1,4 +1,4 @@
-module github.com/LiveAlone/GoLibSourceAnalyse/template
+module github.com/LiveAlone/GoLibSourceAnalyse/rate
 
 go 1.19
 

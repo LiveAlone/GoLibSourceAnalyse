@@ -1,4 +1,4 @@
-package util
+package rate
 
 import (
 	"context"

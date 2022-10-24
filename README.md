@@ -10,9 +10,12 @@ go mod init
 # add dep
 ```
 
-### 目录
+通过 go.work 方式来管理各个子模块。
 
-1. util 工具模板测试
-2. leetcode 算法编辑
-3. lib java 类库相关基础
-4. cron 定时任务相关 github.com/robfig/cron/v3
+### 目录
+1. gorm ORM基于Golang 实现模型
+2. Leetcode 代码算法测试快
+3. lib 基础类库，语言规范
+4. rate 频率限制先关类库
+5. web 基于gin网页开发
+6. util 基础类库相关集合
