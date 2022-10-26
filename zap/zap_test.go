@@ -11,6 +11,16 @@ func TestNone(t *testing.T) {
 	firstStep("www.google.com")
 }
 
+func TestNamespace(t *testing.T) {
+	logger := zap.NewExample()
+	defer logger.Sync()
+
+	logger.With(
+		zap.Namespace("metrics"),
+		zap.Int("counter", 1),
+	).Info("tracked some metrics")
+}
+
 func firstStep(url string) {
 	logger, _ := zap.NewProduction()
 	defer logger.Sync() // flushes buffer, if any
