@@ -2,8 +2,9 @@ package basic
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type LocalServerHandler struct {
@@ -66,13 +67,28 @@ func AppRequestDemo() {
 
 func StartAppFunc() {
 	r := gin.New()
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World!")
-	})
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "pong")
-	})
+	//r.GET("/", func(c *gin.Context) {
+	//	c.String(http.StatusOK, "Hello World!")
+	//})
+	//r.GET("/ping", func(c *gin.Context) {
+	//	c.String(http.StatusOK, "pong")
+	//})
+
+	rt := r.Group("/root")
+	rt.Use(None)
+	{
+		rt.GET("/pong", func(c *gin.Context) {
+			c.String(http.StatusOK, "Hello World!")
+		})
+		rt.GET("/ping", func(c *gin.Context) {
+			c.String(http.StatusOK, "pong")
+		})
+	}
 
 	r.Run(":8080")
 	http.Handle("/", r)
+}
+
+func None(c *gin.Context) {
+	return
 }
