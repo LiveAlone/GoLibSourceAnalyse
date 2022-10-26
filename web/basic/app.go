@@ -81,6 +81,7 @@ func StartAppFunc() {
 			c.String(http.StatusOK, "Hello World!")
 		})
 		rt.GET("/ping", func(c *gin.Context) {
+			c.Header("name", "yaoqijun")
 			c.String(http.StatusOK, "pong")
 		})
 	}
