@@ -6,6 +6,5 @@ use (
 	./rate
 	./lib
 	./gorm
-	./zap
 	./util
 )
