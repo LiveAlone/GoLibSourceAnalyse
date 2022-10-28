@@ -7,5 +7,4 @@ use (
 	./rate
 	./util
 	./web
-	./grpc
 )
