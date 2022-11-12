@@ -1,8 +1,18 @@
+run-server:
+	go run ./h2-server.go
+
+run-client:
+	go run ./h2-client.go
+
+run-client-http1:
+	go run ./h2-client.go -version 1
+
+run-h2conn-server:
+	go run ./h2conn-server.go
+
+run-h2conn-client:
+	go run ./h2conn-client.go
+
 certs:
-	openssl req -newkey rsa:2048 -nodes -keyout data/server.key -x509 -days 365 -out data/server.crt
-
-run-h1-server:
-	go run main/h1Server.go
-
-run-h1-client:
-	go run main/Client.go
+	openssl req -newkey rsa:2048 -nodes -keyout server.key -x509 -days 365 -out server.crt
+	#openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes

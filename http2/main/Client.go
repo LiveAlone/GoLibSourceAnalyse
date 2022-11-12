@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-const url = "https://localhost:8080"
+const url = "https://localhost:8080/"
 
 var httpVersion = flag.Int("version", 2, "HTTP version")
 
@@ -58,7 +58,7 @@ func main() {
 
 // Load CA
 func initCA() (*tls.Config, error) {
-	caCert, err := os.ReadFile("data/server.crt")
+	caCert, err := os.ReadFile("key.pem")
 	if err != nil {
 		return nil, err
 	}
