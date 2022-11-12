@@ -10,7 +10,8 @@ import (
 	"net/http"
 )
 
-const url = "https://localhost:8000/"
+const url = "https://localhost:8080/"
+const ServerPemPath = "keys/server.pem"
 
 var httpVersion = flag.Int("version", 2, "HTTP version")
 
@@ -19,7 +20,7 @@ func main() {
 	client := &http.Client{}
 
 	// Create a pool with the server certificate since it is not signed by a known CA
-	caCert, err := ioutil.ReadFile("server.crt")
+	caCert, err := ioutil.ReadFile(ServerPemPath)
 	if err != nil {
 		log.Fatalf("Reading server certificate: %s", err)
 	}
@@ -28,7 +29,8 @@ func main() {
 
 	// Create TLS configuration with the certificate of the server
 	tlsConfig := &tls.Config{
-		RootCAs: caCertPool,
+		ServerName: "www.p-pp.cn",
+		RootCAs:    caCertPool,
 	}
 
 	// Use the proper transport in the client
