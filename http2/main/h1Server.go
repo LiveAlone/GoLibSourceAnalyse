@@ -6,9 +6,9 @@ import (
 )
 
 func main() {
-	srv := &http.Server{Addr: ":8000", Handler: http.HandlerFunc(handle)}
+	srv := &http.Server{Addr: ":8080", Handler: http.HandlerFunc(handle)}
 
-	log.Printf("Serving on https://0.0.0.0:8000")
+	log.Printf("Serving on https://0.0.0.0:8080")
 	log.Fatal(srv.ListenAndServeTLS("data/server.crt", "data/server.key"))
 }
 

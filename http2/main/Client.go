@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-const url = "https://localhost:8000"
+const url = "https://localhost:8080"
 
 var httpVersion = flag.Int("version", 2, "HTTP version")
 
