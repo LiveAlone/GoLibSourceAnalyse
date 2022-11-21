@@ -1,4 +1,4 @@
-module github.com/LiveAlone/GoLibSourceAnalyse/util
+module github.com/LiveAlone/GoLibSourceAnalyse/zap
 
 go 1.19
 

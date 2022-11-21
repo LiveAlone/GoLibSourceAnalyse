@@ -18,6 +18,6 @@ go mod init
 3. lib 基础类库，语言规范
 4. rate 频率限制先关类库
 5. web 基于gin网页开发
-6. util 基础类库相关集合
+6. zap 日志库
 7. http2 项目网关方式
 8. project 简单开发个人项目
