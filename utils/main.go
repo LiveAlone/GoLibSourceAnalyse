@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd"
@@ -19,6 +20,8 @@ var rootCmd = &cobra.Command{
 }
 
 func main() {
+	cmd.InitConf()
+	fmt.Println(cmd.GlobalConf.DbTypeMap)
 	err := rootCmd.Execute()
 	if err != nil {
 		log.Fatal(err)

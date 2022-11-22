@@ -1,3 +1,9 @@
+package _
+
+import (
+	"git.zuoyebang.cc/huixuexi/classflow/layer"
+	"gorm.io/gorm"
+)
 
 const TableNameOf{{.BeanName}} = "{{.TableName}}"
 
