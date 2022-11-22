@@ -1,4 +1,4 @@
-DbTypeMap:
+db_type_map:
   int:int32
   tinyint:int8
   smallint:int

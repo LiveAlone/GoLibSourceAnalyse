@@ -13,7 +13,8 @@ var GlobalConf Conf
 
 // Conf 配置环境上下文
 type Conf struct {
-	DbTypeMap map[string]string
+	DbTypeMap map[string]string `yaml:"db_type_map"` // DB
+	DebugMode bool              // debug 模式输出信息
 }
 
 func InitConf() {

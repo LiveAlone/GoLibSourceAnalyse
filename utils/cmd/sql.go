@@ -18,7 +18,7 @@ func GenerateFromTable(db, table string) string {
 	// 数据转换
 	cols := make([]*template_struct.Column, len(columns))
 	for i, column := range columns {
-		structType, ok := template_struct.DBTypeToStructType[column.DataType]
+		structType, ok := GlobalConf.DbTypeMap[column.DataType]
 		if !ok {
 			log.Fatalf("data type not found, db:%s, table:%s, type:%s", db, table, column.DataType)
 		}
