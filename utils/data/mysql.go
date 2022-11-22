@@ -12,6 +12,34 @@ type Column struct {
 	ColumnComment string `gorm:"column:COLUMN_COMMENT" json:"column_comment"`
 }
 
+var DBTypeToStructType = map[string]string{
+	"int":        "int32",
+	"tinyint":    "int8",
+	"smallint":   "int",
+	"mediumint":  "int64",
+	"bigint":     "int64",
+	"bit":        "int",
+	"bool":       "bool",
+	"enum":       "string",
+	"set":        "string",
+	"varchar":    "string",
+	"char":       "string",
+	"tinytext":   "string",
+	"mediumtext": "string",
+	"text":       "string",
+	"longtext":   "string",
+	"blob":       "string",
+	"tinyblob":   "string",
+	"mediumblob": "string",
+	"longblob":   "string",
+	"date":       "time.Time",
+	"datetime":   "time.Time",
+	"timestamp":  "time.Time",
+	"time":       "time.Time",
+	"float":      "float64",
+	"double":     "float64",
+}
+
 func QueryColumns(url, databaseName, table string) ([]*Column, error) {
 	db, err := util.BuildDbClient(url)
 	if err != nil {
