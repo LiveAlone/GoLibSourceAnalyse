@@ -3,6 +3,7 @@ package template_struct
 // ModelStruct 模型对象
 type ModelStruct struct {
 	TableName string
+	BeanName  string
 	Columns   []*Column
 }
 

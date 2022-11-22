@@ -8,6 +8,6 @@ import (
 )
 
 func TestDemo(t *testing.T) {
-	rs := cmd.GenerateFromTable("", "")
+	rs := cmd.GenerateFromTable("hxx_live", "tblTeacherLiveQuestionInfo")
 	fmt.Println(rs)
 }
