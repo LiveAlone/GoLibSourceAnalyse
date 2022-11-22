@@ -1,4 +1,4 @@
-package data
+package util
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 
 func TestQueryColumns(t *testing.T) {
 	url := "homework:homework@tcp(10.112.36.52:6060)/information_schema?charset=utf8mb4&parseTime=True&loc=Local"
-	columns, err := QueryColumns(url, "hxx_apps", "tblActivityBasic")
+	columns, err := QueryColumns(url, "hxx_live", "tblTeacherLiveQuestionInfo")
 	if err != nil {
 		t.Error(err)
 	}

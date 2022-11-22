@@ -1,0 +1,5 @@
+
+type {{ .TableName | ToCamelCaseFistLarge }} struct {
+    {{range .Columns}}{{.ColumnName | ToCamelCaseFistLarge}}  {{.StructType}} `gorm:"column:{{.ColumnName}}" json:"{{.ColumnName}}"`    {{$commentLength := len .Comment }} {{ if gt $commentLength 0 }} // {{ .Comment }} {{end}}
+    {{end}}
+}
