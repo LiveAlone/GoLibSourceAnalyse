@@ -1,4 +1,5 @@
 db:
-  url: urlLinked
-  database: hxx_live
-  tables: *
+  url: homework:homework@tcp(10.112.36.52:6060)/information_schema?charset=utf8mb4&parseTime=True&loc=Local
+  dataBase: hxx_live
+  tables: tblTeacherLiveQuestionInfo
+

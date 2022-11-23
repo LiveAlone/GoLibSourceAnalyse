@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/spf13/cobra"
 
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
@@ -24,16 +26,39 @@ var SqlCmd = &cobra.Command{
 	Long:  "dest持久化生成地址，db.yaml 配置文件",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("数据表Model文件转换, ", targetPath)
-		content, err := os.ReadFile("dest//db.yaml")
+		content, err := os.ReadFile(fmt.Sprintf("%s/%s", targetPath, "db.yaml"))
 		if err != nil {
-			log.Fatalf("err %v", err)
+			log.Fatalf("yaml file read error %v", err)
 		}
-		fmt.Println(string(content))
+		var config SqlModelConfig
+		err = yaml.Unmarshal(content, &config)
+		if err != nil {
+			log.Fatalf("yaml convert err %v", err)
+		}
+
+		db := config.Db
+		tbs := strings.Split(db.Tables, ",")
+		for _, tb := range tbs {
+			code := GenerateFromTable(db.Url, db.DataBase, tb)
+			err = os.WriteFile(ToSnakeLower(strings.TrimPrefix(tb, "tbl")), []byte(code), 0666)
+			if err != nil {
+				log.Fatalf("tb file write error, err :%v", err)
+			}
+		}
 	},
 }
 
-func GenerateFromTable(db, table string) string {
-	url := "homework:homework@tcp(10.112.36.52:6060)/information_schema?charset=utf8mb4&parseTime=True&loc=Local"
+type SqlModelConfig struct {
+	Db *DbConfig `yaml:"db"`
+}
+
+type DbConfig struct {
+	Url      string `yaml:"url"`
+	DataBase string `yaml:"dataBase"`
+	Tables   string `yaml:"tables"`
+}
+
+func GenerateFromTable(url, db, table string) string {
 	columns, err := util.QueryColumns(url, db, table)
 	if err != nil {
 		log.Fatalf("db struct columns query fail, err %v", err)
