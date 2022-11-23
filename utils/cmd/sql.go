@@ -40,7 +40,8 @@ var SqlCmd = &cobra.Command{
 		tbs := strings.Split(db.Tables, ",")
 		for _, tb := range tbs {
 			code := GenerateFromTable(db.Url, db.DataBase, tb)
-			err = os.WriteFile(ToSnakeLower(strings.TrimPrefix(tb, "tbl")), []byte(code), 0666)
+			fileName := ToSnakeLower(strings.TrimPrefix(tb, "tbl"))
+			err = os.WriteFile(fmt.Sprintf("%s/%s.go", targetPath, fileName), []byte(code), 0666)
 			if err != nil {
 				log.Fatalf("tb file write error, err :%v", err)
 			}
