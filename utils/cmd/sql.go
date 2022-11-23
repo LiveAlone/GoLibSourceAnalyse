@@ -1,12 +1,36 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"strings"
+
+	"github.com/spf13/cobra"
 
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util/template_struct"
 )
+
+var targetPath string
+
+func init() {
+	SqlCmd.Flags().StringVarP(&targetPath, "dest", "d", "", "文件生成目标地址")
+}
+
+var SqlCmd = &cobra.Command{
+	Use:   "model",
+	Short: "Dao持久化层生成代码",
+	Long:  "dest持久化生成地址，db.yaml 配置文件",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("数据表Model文件转换, ", targetPath)
+		content, err := os.ReadFile("dest//db.yaml")
+		if err != nil {
+			log.Fatalf("err %v", err)
+		}
+		fmt.Println(string(content))
+	},
+}
 
 func GenerateFromTable(db, table string) string {
 	url := "homework:homework@tcp(10.112.36.52:6060)/information_schema?charset=utf8mb4&parseTime=True&loc=Local"

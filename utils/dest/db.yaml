@@ -1,0 +1,4 @@
+db:
+  url: urlLinked
+  database: hxx_live
+  tables: *
