@@ -31,21 +31,21 @@ func (entity *{{.BeanName}}Dao) Insert(bean *{{ .TableName | ToCamelCaseFistLarg
 	return nil
 }
 
-func (entity *{{.BeanName}}Dao) Update(info *{{ .TableName | ToCamelCaseFistLarge }}) error {
+func (entity *{{.BeanName}}Dao) Update(info *{{ .TableName | ToCamelCaseFistLarge }}) (int64, error) {
     if info.Id == 0 {
 		return 0, outerror.ErrorParamInvalid
 	}
 	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Updates(info)
 	if rs.Error != nil {
 		zlog.Errorf(entity.Ctx, "db update {{.TableName}} error, info:%v, cause:%v", info, rs.Error)
-		return 0, outerror.ErrorDbUpdate.Sprintf(err.Error())
+		return 0, outerror.ErrorDbUpdate.Sprintf(rs.Error.Error())
 	}
 	return rs.RowsAffected, nil
 }
 
 func (entity *{{.BeanName}}Dao) QueryById(id int64) (*{{ .TableName | ToCamelCaseFistLarge }}, error) {
     if id == 0 {
-		return 0, outerror.ErrorParamInvalid
+		return nil, outerror.ErrorParamInvalid
 	}
 	info := new({{ .TableName | ToCamelCaseFistLarge }})
 	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Find(&info, id)
@@ -54,7 +54,7 @@ func (entity *{{.BeanName}}Dao) QueryById(id int64) (*{{ .TableName | ToCamelCas
    	}
 	if rs.Error != nil {
 		zlog.Errorf(entity.Ctx, "db query by id {{.TableName}} error, id:%v, cause:%v", id, rs.Error)
-		return nil, outerror.ErrorDbSelect.Sprintf(err.Error())
+		return nil, outerror.ErrorDbSelect.Sprintf(rs.Error.Error())
 	}
 	return info, nil
 }

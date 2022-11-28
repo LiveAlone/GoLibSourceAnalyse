@@ -44,7 +44,7 @@ func (entity *{{.BeanName}}Dao) Update(info *{{ .TableName | ToCamelCaseFistLarg
 
 func (entity *{{.BeanName}}Dao) QueryById(id int64) (*{{ .TableName | ToCamelCaseFistLarge }}, error) {
     if id == 0 {
-		return 0, components.ErrorParamInvalid
+		return nil, components.ErrorParamInvalid
 	}
 	info := new({{ .TableName | ToCamelCaseFistLarge }})
 	rs := entity.Dao.GetDB().Find(&info, id)
