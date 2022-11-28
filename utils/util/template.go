@@ -8,7 +8,8 @@ import (
 )
 
 var supportTemplates = map[string]string{
-	"model": "conf/template/model.template",
+	"model":  "conf/template/model.template",
+	"model2": "conf/template/model2.template",
 }
 
 // GenerateFromTemplate 模版生成文本内容
