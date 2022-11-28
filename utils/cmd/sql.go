@@ -93,7 +93,7 @@ func GenerateFromTable(url, db, table string) string {
 
 	ms.BeanName = ToCamelCaseFistLarge(strings.TrimPrefix(table, "tbl"))
 
-	return util.GenerateFromTemplate("model", ms, map[string]any{
+	return util.GenerateFromTemplate("model2", ms, map[string]any{
 		"ToCamelCaseFistLarge": ToCamelCaseFistLarge,
 	})
 }
