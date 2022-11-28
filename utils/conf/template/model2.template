@@ -22,15 +22,11 @@ func New{{.BeanName}}Dao(ctx *gin.Context) (db *{{.BeanName}}Dao) {
 	return
 }
 
-func (entity *{{.BeanName}}Dao) OnCreate(param layer.IFlowParam) {
-	entity.Dao.OnCreate(param)
-	entity.SetTable(TableNameOf{{.BeanName}})
-}
 
 func (entity *{{.BeanName}}Dao) Insert(bean *{{ .TableName | ToCamelCaseFistLarge }}) error {
-	err := entity.GetDB().Create(bean).Error
+	err := entity.Tx.Table(TableNameOf{{.BeanName}}).Create(bean).Error
 	if err != nil {
-		entity.LogErrorf("db insert {{.TableName}} error, bean:%v, cause:%v", bean, err)
+		zlog.Errorf(entity.Ctx, "db insert {{.TableName}} error, bean:%v, cause:%v", bean, err)
 		return components.ErrorDbInsert.Sprintf(err.Error())
 	}
 	return nil
@@ -40,9 +36,9 @@ func (entity *{{.BeanName}}Dao) Update(info *{{ .TableName | ToCamelCaseFistLarg
     if info.Id == 0 {
 		return 0, components.ErrorParamInvalid
 	}
-	rs := entity.Dao.GetDB().Updates(info)
+	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Updates(info)
 	if rs.Error != nil {
-		entity.LogErrorf("db update {{.TableName}} error, info:%v, cause:%v", info, rs.Error)
+		zlog.Errorf(entity.Ctx, "db update {{.TableName}} error, info:%v, cause:%v", info, rs.Error)
 		return 0, components.ErrorDbUpdate.Sprintf(err.Error())
 	}
 	return rs.RowsAffected, nil
@@ -53,12 +49,12 @@ func (entity *{{.BeanName}}Dao) QueryById(id int64) (*{{ .TableName | ToCamelCas
 		return 0, components.ErrorParamInvalid
 	}
 	info := new({{ .TableName | ToCamelCaseFistLarge }})
-	rs := entity.Dao.GetDB().Find(&info, id)
+	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Find(&info, id)
 	if rs.Error == gorm.ErrRecordNotFound {
    		return nil, nil
    	}
 	if rs.Error != nil {
-		entity.LogErrorf("db query by id {{.TableName}} error, id:%v, cause:%v", id, rs.Error)
+		zlog.Errorf(entity.Ctx, "db query by id {{.TableName}} error, id:%v, cause:%v", id, rs.Error)
 		return nil, components.ErrorDbSelect.Sprintf(err.Error())
 	}
 	return info, nil
