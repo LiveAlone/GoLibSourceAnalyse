@@ -95,5 +95,6 @@ func GenerateFromTable(url, db, table string) string {
 
 	return util.GenerateFromTemplate("model2", ms, map[string]any{
 		"ToCamelCaseFistLarge": ToCamelCaseFistLarge,
+		"ToCamelCaseFistLower": ToCamelCaseFistLower,
 	})
 }

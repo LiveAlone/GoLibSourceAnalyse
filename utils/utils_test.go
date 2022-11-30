@@ -12,3 +12,9 @@ func TestDemo(t *testing.T) {
 	rs := cmd.GenerateFromTable(url, "hxx_live", "tblTeacherLiveQuestionInfo")
 	fmt.Println(rs)
 }
+
+func TestNone(t *testing.T) {
+	text := "魑魅魍魉"
+	fmt.Println(len([]rune(text)))
+
+}
