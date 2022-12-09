@@ -3,18 +3,20 @@ package main
 import (
 	"fmt"
 	"testing"
-
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd"
 )
 
-func TestDemo(t *testing.T) {
-	url := "homework:homework@tcp(10.112.36.52:6060)/information_schema?charset=utf8mb4&parseTime=True&loc=Local"
-	rs := cmd.GenerateFromTable(url, "hxx_live", "tblTeacherLiveQuestionInfo")
-	fmt.Println(rs)
-}
-
 func TestNone(t *testing.T) {
-	text := "魑魅魍魉"
-	fmt.Println(len([]rune(text)))
-
+	a := 1100
+	switch a {
+	case 100:
+		fmt.Println(100)
+	case 200:
+		fmt.Println(200)
+	case 300:
+		fmt.Println(300)
+	case 400:
+		fmt.Println(400)
+	default:
+		fmt.Println("err")
+	}
 }
