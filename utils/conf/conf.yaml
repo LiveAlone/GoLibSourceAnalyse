@@ -25,3 +25,12 @@ db_type_map:
   float: float64
   double: float64
 
+go_nullable_map:
+  byte : NullByte
+  bool : NullBool
+  float64 : NullFloat64
+  int64 : NullInt64
+  int32 : NullInt32
+  int16 : NullInt16
+  string : NullString
+  time.Time : NullTime
