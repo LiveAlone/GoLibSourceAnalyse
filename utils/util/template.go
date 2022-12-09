@@ -2,22 +2,21 @@ package util
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"text/template"
 )
 
 var supportTemplates = map[string]string{
+	"basic":  "conf/template/model.template",
 	"model":  "conf/template/model.template",
 	"model2": "conf/template/model2.template",
 }
 
 // GenerateFromTemplate 模版生成文本内容
 func GenerateFromTemplate(templateName string, data any, funcMap template.FuncMap) string {
-	filePath, ok := supportTemplates[templateName]
-	if !ok {
-		log.Fatalf("template file not found %s", templateName)
-	}
+	filePath := fmt.Sprintf("conf/template/%s.template", templateName)
 	bc, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Fatalf("os read file error, %s, %v", filePath, err)

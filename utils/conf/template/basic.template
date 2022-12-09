@@ -1,0 +1,82 @@
+package _
+
+import (
+    "github.com/gin-gonic/gin"
+
+    "database/sql"
+
+    "gorm.io/datatypes"
+	"gorm.io/gorm"
+)
+
+const TableNameOf{{.BeanName}} = "{{.TableName}}"
+
+// {{.BeanName}} {{.Comment}}
+type {{ .BeanName }} struct {
+    gorm.Model
+    {{- range .Columns}}
+    {{- if or (eq .ColumnName "id") (or (eq .ColumnName "created_at") ( or (eq .ColumnName "updated_at") (eq .ColumnName "deleted_at") ) ) }}{{ continue }}{{ end }}
+    {{.ColumnName | ToCamelCaseFistLarge}} {{.FieldType}} //{{.Comment}}
+    {{- end}}
+}
+
+type {{.BeanName}}Dao struct {
+    Ctx *gin.Context
+    Tx  *gorm.DB
+}
+
+func New{{.BeanName}}Dao(ctx *gin.Context) (db *{{.BeanName}}Dao) {
+	db = new({{.BeanName}}Dao)
+	// todo 初始化db，context
+	db.Ctx = ctx
+	return
+}
+
+func (entity *{{.BeanName}}Dao) Insert(bean *{{ .BeanName }}) error {
+	err := entity.Tx.Table(TableNameOf{{.BeanName}}).Create(bean).Error
+	if err != nil {
+		zlog.Errorf(entity.Ctx, "db insert {{.TableName}} error, bean:%v, cause:%v", bean, err)
+		return outerror.ErrorDbInsert.Sprintf(err.Error())
+	}
+	return nil
+}
+
+func (entity *{{.BeanName}}Dao) Update(info *{{ .BeanName }}) (int64, error) {
+    if info.ID == 0 {
+  	    return 0, outerror.ErrorParamInvalid
+  	}
+  	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Updates(info)
+  	if rs.Error != nil {
+  		zlog.Errorf(entity.Ctx, "db update {{.TableName}} error, info:%v, cause:%v", info, rs.Error)
+  		return 0, outerror.ErrorDbUpdate.Sprintf(rs.Error.Error())
+  	}
+  	return rs.RowsAffected, nil
+}
+
+func (entity *{{.BeanName}}Dao) QueryById(id int64) (*{{ .BeanName }}, error) {
+    if id == 0 {
+		return nil, outerror.ErrorParamInvalid
+	}
+	info := new({{ .BeanName }})
+	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Find(&info, id)
+	if rs.Error == gorm.ErrRecordNotFound {
+   		return nil, nil
+   	}
+	if rs.Error != nil {
+		zlog.Errorf(entity.Ctx, "db query by id {{.TableName}} error, id:%v, cause:%v", id, rs.Error)
+		return nil, outerror.ErrorDbSelect.Sprintf(rs.Error.Error())
+	}
+	return info, nil
+}
+
+func (entity *{{.BeanName}}Dao) QueryByIds(ids []int64) (list []*{{ .BeanName }}, err error) {
+    if len(ids) == 0 {
+		return nil, nil
+	}
+	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Find(&list, ids)
+	if rs.Error != nil {
+		zlog.Errorf(entity.Ctx, "db query by ids {{.TableName}} error, ids:%v, cause:%v", ids, rs.Error)
+		return nil, outerror.ErrorDbSelect.Sprintf(rs.Error.Error())
+	}
+	return list, nil
+}

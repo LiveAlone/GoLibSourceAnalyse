@@ -15,6 +15,24 @@ type Column struct {
 	ColumnComment string `gorm:"column:COLUMN_COMMENT" json:"column_comment"`
 }
 
+type Table struct {
+	TableSchema  string `gorm:"column:TABLE_SCHEMA"`
+	TableName    string `gorm:"column:TABLE_NAME"`
+	TableComment string `gorm:"column:TABLE_COMMENT"`
+}
+
+func QueryTable(url, databaseName, table string) (tb *Table, err error) {
+	db, err := BuildDbClient(url)
+	if err != nil {
+		return nil, err
+	}
+	tx := db.Table("TABLES").Where("TABLE_SCHEMA = ? and TABLE_NAME = ?", databaseName, table).Find(&tb)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return tb, nil
+}
+
 func QueryColumns(url, databaseName, table string) ([]*Column, error) {
 	db, err := BuildDbClient(url)
 	if err != nil {
@@ -25,7 +43,7 @@ func QueryColumns(url, databaseName, table string) ([]*Column, error) {
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	return columns, err
+	return columns, nil
 }
 
 func BuildDbClient(dbUrl string) (*gorm.DB, error) {

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -11,7 +12,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util/template_struct"
 )
 
 var targetPath string
@@ -25,7 +25,8 @@ var SqlCmd = &cobra.Command{
 	Short: "Dao持久化层生成代码",
 	Long:  "dest持久化生成地址，db.yaml 配置文件",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("数据表Model文件转换, ", targetPath)
+		// 配置文件读取
+		fmt.Println("数据表目标地址: ", targetPath)
 		content, err := os.ReadFile(fmt.Sprintf("%s/%s", targetPath, "db.yaml"))
 		if err != nil {
 			log.Fatalf("yaml file read error %v", err)
@@ -36,6 +37,7 @@ var SqlCmd = &cobra.Command{
 			log.Fatalf("yaml convert err %v", err)
 		}
 
+		// 数据表生成
 		db := config.Db
 		tbs := strings.Split(db.Tables, ",")
 		for _, tb := range tbs {
@@ -45,6 +47,7 @@ var SqlCmd = &cobra.Command{
 			if err != nil {
 				log.Fatalf("tb file write error, err :%v", err)
 			}
+			fmt.Println("数据表Model 生成完成: ", tb)
 		}
 	},
 }
@@ -59,42 +62,71 @@ type DbConfig struct {
 	Tables   string `yaml:"tables"`
 }
 
-func GenerateFromTable(url, db, table string) string {
-	columns, err := util.QueryColumns(url, db, table)
+func GenerateFromTable(url, dbName, tableName string) string {
+	columns, err := util.QueryColumns(url, dbName, tableName)
 	if err != nil {
 		log.Fatalf("db struct columns query fail, err %v", err)
 	}
+	table, err := util.QueryTable(url, dbName, tableName)
+	if err != nil {
+		log.Fatalf("db table info gain error, err:%v", err)
+	}
 
-	// 数据转换
-	cols := make([]*template_struct.Column, len(columns))
+	// 构建数据转换列表
+	cols := make([]*ModelField, len(columns))
 	for i, column := range columns {
-		structType, ok := GlobalConf.DbTypeMap[column.DataType]
+		fieldType, ok := GlobalConf.DbTypeMap[column.DataType]
 		if !ok {
-			log.Fatalf("data type not found, db:%s, table:%s, type:%s", db, table, column.DataType)
+			log.Fatalf("data type not found, db:%s, table:%s, type:%s", dbName, table, column.DataType)
 		}
 
-		isPrimary := column.ColumnKey == "PRI"
-		notNull := column.IsNullable == "NO"
+		if column.IsNullable == "YES" {
+			toFieldType, ok := GlobalConf.GoNullableMap[fieldType]
+			if !ok {
+				log.Fatalf("go nullable type not found, db:%s, table:%s, go_type:%s nullable tyle:%v", dbName, table, column.DataType, toFieldType)
+			}
+			fieldType = toFieldType
+		}
 
-		cols[i] = &template_struct.Column{
+		if (fieldType == "string" || fieldType == "sql.NullString") && strings.Contains(column.ColumnComment, "json") {
+			fieldType = "datatypes.JSON"
+		}
+
+		cols[i] = &ModelField{
 			ColumnName: column.ColumnName,
-			DbType:     column.DataType,
-			StructType: structType,
-			IsPrimary:  isPrimary,
-			NotNull:    notNull,
+			FieldType:  fieldType,
 			Comment:    column.ColumnComment,
 		}
 	}
 
-	ms := template_struct.ModelStruct{
-		TableName: table,
+	// 构建数据表结构
+	ms := ModelStruct{
+		TableName: tableName,
+		BeanName:  ToCamelCaseFistLarge(strings.TrimPrefix(tableName, "tbl")),
 		Columns:   cols,
+		Comment:   table.TableComment,
 	}
 
-	ms.BeanName = ToCamelCaseFistLarge(strings.TrimPrefix(table, "tbl"))
+	ds, _ := json.Marshal(ms)
+	fmt.Println(string(ds))
 
-	return util.GenerateFromTemplate("model2", ms, map[string]any{
+	return util.GenerateFromTemplate("basic", ms, map[string]any{
 		"ToCamelCaseFistLarge": ToCamelCaseFistLarge,
 		"ToCamelCaseFistLower": ToCamelCaseFistLower,
 	})
+}
+
+// ModelStruct 模型对象
+type ModelStruct struct {
+	TableName string
+	BeanName  string
+	Columns   []*ModelField
+	Comment   string // todo yqj 数据表注释
+}
+
+// ModelField 实体对象类型
+type ModelField struct {
+	ColumnName string // db 字段名称
+	FieldType  string // 结构体数据类型
+	Comment    string // 字段评论
 }

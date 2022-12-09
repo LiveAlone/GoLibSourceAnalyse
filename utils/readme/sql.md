@@ -1,6 +1,12 @@
 # model 数据库表生成model层
 
-## conf 数据类型映射关系
+## roadmap
+
+### todo
+
+1. 设计转换 datatypes 定制化类型转换
+
+## 设计
 
 ### 基础数据类型映射  
 
@@ -38,3 +44,39 @@ CREATE TABLE `tblModelTable` (
 2. ```datatypes.RawMessage``` comment 包含json, 转换该类型
 3. ```datatypes.Time``` comment 包含timestamp 转换
 4. ```datatypes.URL``` 非空转换类型 
+
+
+### 通过Dao 封装Context 上下文
+
+1. ```type {XXX}Dao struct{ ctx Context }``` 定义context 上下文
+2. ```New{XXX}Dao() *{XXX}Dao``` 创建实体对象上下文
+
+### 函数
+1. Update 实体对象修改。
+2. Insert BatchInsert 添加批量添加函数
+3. Delete 通过id 删除实体对象
+4. QueryByIds 通过 Ids列表查询
+
+
+## template 上下文定义
+
+字段定义
+```json
+{
+    "TableName":"tblModelTable",
+    "BeanName":"ModelTable",
+    "Columns":[
+        {
+            "ColumnName":"id",
+            "FieldType":"int64",
+            "Comment":"主键id"
+        },
+        {
+            "ColumnName":"name",
+            "FieldType":"string",
+            "Comment":""
+        }
+    ],
+    "Comment":"数据表模型"
+}
+```
