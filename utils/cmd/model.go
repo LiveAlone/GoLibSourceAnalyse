@@ -63,11 +63,17 @@ type DbConfig struct {
 }
 
 func GenerateFromTable(url, dbName, tableName string) string {
-	columns, err := util.QueryColumns(url, dbName, tableName)
+
+	infomationClient, err := util.NewDBInformationClient(url)
+	if err != nil {
+		log.Fatalf("db information create fail, err %v", err)
+	}
+
+	columns, err := infomationClient.QueryColumns(dbName, tableName)
 	if err != nil {
 		log.Fatalf("db struct columns query fail, err %v", err)
 	}
-	table, err := util.QueryTable(url, dbName, tableName)
+	table, err := infomationClient.QueryTable(dbName, tableName)
 	if err != nil {
 		log.Fatalf("db table info gain error, err:%v", err)
 	}
