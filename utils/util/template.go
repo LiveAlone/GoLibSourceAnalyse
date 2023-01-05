@@ -8,12 +8,6 @@ import (
 	"text/template"
 )
 
-var supportTemplates = map[string]string{
-	"basic":  "conf/template/model.template",
-	"model":  "conf/template/model.template",
-	"model2": "conf/template/model2.template",
-}
-
 // GenerateFromTemplate 模版生成文本内容
 func GenerateFromTemplate(templateName string, data any, funcMap template.FuncMap) string {
 	filePath := fmt.Sprintf("conf/template/%s.template", templateName)
