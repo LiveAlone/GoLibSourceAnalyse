@@ -1,7 +1,6 @@
 package file_convert
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
@@ -38,8 +37,10 @@ var FileConvert = &cobra.Command{
 }
 
 func lineConvert(i int, line string) (string, bool) {
-	fmt.Println(i, line)
-	return "123\n", false
+	//return RoleConvert(line)
+	//return OrgConvert(line)
+	//return UserConvert(line)
+	return RelationConvert(line)
 }
 
 func init() {
