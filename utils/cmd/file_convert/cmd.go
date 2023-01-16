@@ -1,6 +1,12 @@
 package file_convert
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+	"log"
+
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
+	"github.com/spf13/cobra"
+)
 
 var fromFile, destFile string
 
@@ -9,8 +15,31 @@ var FileConvert = &cobra.Command{
 	Short: "文件行转换",
 	Long:  "用户需求进行文件行格式化",
 	Run: func(cmd *cobra.Command, args []string) {
+		lines, err := util.ReadFileLines(fromFile)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
 
+		destLines := make([]string, 0, len(lines))
+		for i, line := range lines {
+			destLine, exit := lineConvert(i, line)
+			destLines = append(destLines, destLine)
+			if exit {
+				break
+			}
+		}
+		err = util.WriteFileLines(destFile, destLines)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
 	},
+}
+
+func lineConvert(i int, line string) (string, bool) {
+	fmt.Println(i, line)
+	return "123\n", false
 }
 
 func init() {

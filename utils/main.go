@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd/file_convert"
+
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd"
 
 	"github.com/spf13/cobra"
@@ -11,6 +13,7 @@ import (
 func init() {
 	rootCmd.AddCommand(cmd.WordCmd)
 	rootCmd.AddCommand(cmd.SqlCmd)
+	rootCmd.AddCommand(file_convert.FileConvert)
 }
 
 var rootCmd = &cobra.Command{

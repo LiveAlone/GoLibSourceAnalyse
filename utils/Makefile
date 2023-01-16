@@ -7,5 +7,8 @@ model:
 build:
 	go build
 
+convert:
+	go run main.go convert -f=dest/from.txt -t=dest/to.txt
+
 clean:
 	rm -rf utils
