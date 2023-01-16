@@ -6,15 +6,14 @@ import (
 	"testing"
 )
 
-type Local struct {
-	Names []string
+type Body struct {
+	Msg interface{}
 }
 
 func TestNone(t *testing.T) {
-	l := Local{}
-	if l.Names == nil {
-		fmt.Println("none")
-	}
-	rs, _ := json.Marshal(l.Names)
-	fmt.Println(string(rs))
+	var body Body
+	s := "{\"yao\":123,\"qi\":456,\"jun\":[1,2,3]}"
+	err := json.Unmarshal([]byte(s), &body.Msg)
+	fmt.Println(err)
+	fmt.Println(body)
 }
