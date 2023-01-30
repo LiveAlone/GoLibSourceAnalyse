@@ -26,7 +26,7 @@ type {{.BeanName}}Dao struct {
 
 func (entity *{{.BeanName}}Dao) OnCreate(param layer.IFlowParam) {
 	entity.Dao.OnCreate(param)
-	entity.SetTable({{.TableName}})
+	entity.SetTable(TableNameOf{{.BeanName}})
 }
 
 func (entity *{{.BeanName}}Dao) Insert(bean *{{ .BeanName }}) error {
