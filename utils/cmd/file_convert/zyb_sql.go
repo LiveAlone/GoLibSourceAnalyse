@@ -35,7 +35,11 @@ type MsgUser struct {
 var userSql = "insert into tblShuangJianTongUser(user_id, account, real_name, phone, password, status, created_at, updated_at) value (%d,'%s','%s','%s','%s',%d,now(),now()) on duplicate key update "
 var userDup = "account='%s', real_name='%s', phone='%s', password='%s', status=%d, updated_at=now();\n"
 
-func UserConvert(line string) (string, bool) {
+func UserConvert(i int, line string) (string, bool) {
+	if i >= 50000 {
+		return "", true
+	}
+
 	user := new(MsgUser)
 	if err := json.Unmarshal([]byte(line), user); err != nil {
 		log.Fatal(err)

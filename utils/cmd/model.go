@@ -116,7 +116,7 @@ func GenerateFromTable(url, dbName, tableName string) string {
 	ds, _ := json.Marshal(ms)
 	fmt.Println(string(ds))
 
-	return util.GenerateFromTemplate("basic", ms, map[string]any{
+	return util.GenerateFromTemplate("flow", ms, map[string]any{
 		"ToCamelCaseFistLarge": ToCamelCaseFistLarge,
 		"ToCamelCaseFistLower": ToCamelCaseFistLower,
 	})

@@ -39,8 +39,8 @@ var FileConvert = &cobra.Command{
 func lineConvert(i int, line string) (string, bool) {
 	//return RoleConvert(line)
 	//return OrgConvert(line)
-	//return UserConvert(line)
-	return RelationConvert(line)
+	return UserConvert(i, line)
+	//return RelationConvert(line)
 }
 
 func init() {
