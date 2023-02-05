@@ -11,9 +11,9 @@ type Body struct {
 }
 
 func TestNone(t *testing.T) {
-	var body Body
-	s := "{\"yao\":123,\"qi\":456,\"jun\":[1,2,3]}"
-	err := json.Unmarshal([]byte(s), &body.Msg)
+	var entity map[string][]int
+	s := "{\"qi\":[10, 100],\"jun\":[1,2,3]}"
+	err := json.Unmarshal([]byte(s), entity)
 	fmt.Println(err)
-	fmt.Println(body)
+	fmt.Println(entity)
 }

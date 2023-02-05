@@ -16,7 +16,7 @@ type {{ .BeanName }} struct {
     gorm.Model
     {{- range .Columns}}
     {{- if or (eq .ColumnName "id") (or (eq .ColumnName "created_at") ( or (eq .ColumnName "updated_at") (eq .ColumnName "deleted_at") ) ) }}{{ continue }}{{ end }}
-    {{.ColumnName | ToCamelCaseFistLarge}} {{.FieldType}} //{{.Comment}}
+    {{.ColumnName | ToCamelCaseFistLarge}} {{.FieldType}} `gorm:"column:{{ .ColumnName }}"` //{{.Comment}}
     {{- end}}
 }
 
