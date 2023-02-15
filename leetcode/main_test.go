@@ -1,12 +1,10 @@
 package leetcode
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestBasic(t *testing.T) {
-	fmt.Println(longestPalindrome("babad"))
 }
 
 func lengthOfLongestSubstring(s string) int {
