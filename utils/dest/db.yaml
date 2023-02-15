@@ -1,5 +1,5 @@
 db:
   url: homework:homework@tcp(10.117.0.4:3306)/information_schema?charset=utf8mb4&parseTime=True&loc=Local
   dataBase: hxx_unit_qa
-  tables: tblStationingOperators
+  tables: tblTeachPostRole
 
