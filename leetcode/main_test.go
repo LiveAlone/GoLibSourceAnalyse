@@ -2,11 +2,46 @@ package leetcode
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
 func TestBasic(t *testing.T) {
-	fmt.Println(convert("A", 1))
+	fmt.Println(isPalindrome(121))
+}
+
+func isPalindrome(x int) bool {
+	if x < 0 {
+		return false
+	}
+	v := x
+	rs := 0
+	for v > 0 {
+		rs = rs*10 + (v % 10)
+		v = v / 10
+	}
+	return rs == x
+}
+
+func myAtoi(s string) int {
+	curs := strings.TrimSpace(s)
+	rs, pos := 0, 0
+	neg := false
+	if curs[0] == '-' {
+		pos += 1
+		neg = true
+	}
+	for pos < len(curs) && curs[pos] >= '0' && curs[pos] <= '9' {
+		if rs*10 < rs {
+			break
+		}
+		rs = rs*10 + int(curs[pos]-'0')
+		pos += 1
+	}
+	if neg {
+		return -rs
+	}
+	return rs
 }
 
 func convert(s string, numRows int) string {

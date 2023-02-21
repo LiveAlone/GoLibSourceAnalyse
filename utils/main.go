@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
-
+	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd/file_convert"
+	"math"
 
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd"
 
@@ -23,9 +23,10 @@ var rootCmd = &cobra.Command{
 }
 
 func main() {
-	cmd.InitConf()
-	err := rootCmd.Execute()
-	if err != nil {
-		log.Fatal(err)
-	}
+	//cmd.InitConf()
+	//err := rootCmd.Execute()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	fmt.Println(math.MaxInt8)
 }
