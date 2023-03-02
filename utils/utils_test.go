@@ -1,12 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"testing"
 )
 
-func TestNone(t *testing.T) {
+type Person struct {
+	Name string
+}
 
-	id := 501211
-	fmt.Println(id & 15)
+func TestNone(t *testing.T) {
+	//p := &Person{
+	//	Name: "123",
+	//}
+	var p *Person
+	log.Fatalf("p is :%v", *p)
 }
