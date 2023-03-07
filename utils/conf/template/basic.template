@@ -32,79 +32,80 @@ func New{{.BeanName}}Dao(ctx *gin.Context) (db *{{.BeanName}}Dao) {
 	return
 }
 
+func (entity *{{.BeanName}}Dao) GetDB() *gorm.DB {
+    return entity.Tx
+}
+
 func (entity *{{.BeanName}}Dao) Insert(bean *{{ .BeanName }}) error {
-	err := entity.Tx.Table(TableNameOf{{.BeanName}}).Create(bean).Error
+	err := entity.GetDB().Table(TableNameOf{{.BeanName}}).Create(bean).Error
 	if err != nil {
 		zlog.Errorf(entity.Ctx, "db insert {{.TableName}} error, bean:%v, cause:%v", bean, err)
-		return outerror.ErrorDbInsert.Sprintf(err.Error())
+		return err
 	}
 	return nil
 }
 
 func (entity *{{.BeanName}}Dao) UpdateAllFields(info *{{ .BeanName }}) (int64, error) {
     if info.ID == 0 {
-  	    return 0, outerror.ErrorParamInvalid
+  	    return 0, components.ErrorParamInvalid
   	}
-  	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Save(info)
+  	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Save(info)
 	if rs.Error != nil {
 		zlog.Errorf(entity.Ctx, "db UpdateAllFields {{.TableName}} error, info:%v, cause:%v", info, rs.Error)
-        return 0, outerror.ErrorDbUpdate.Sprintf(rs.Error.Error())
+        return 0, rs.Error
 	}
-	return result.RowsAffected, nil
+	return rs.RowsAffected, nil
 }
 
 func (entity *{{.BeanName}}Dao) UpdateByEntity(info *{{ .BeanName }}) (int64, error) {
     if info.ID == 0 {
-  	    return 0, outerror.ErrorParamInvalid
+  	    return 0, components.ErrorParamInvalid
   	}
-  	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Updates(info)
+  	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Updates(info)
   	if rs.Error != nil {
   		zlog.Errorf(entity.Ctx, "db UpdateByEntity {{.TableName}} error, info:%v, cause:%v", info, rs.Error)
-  		return 0, outerror.ErrorDbUpdate.Sprintf(rs.Error.Error())
+  		return 0, rs.Error
   	}
   	return rs.RowsAffected, nil
 }
 
 func (entity *{{.BeanName}}Dao) Update(values map[string]interface{}, scopes *WhereScopes) (int64, error) {
-  	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Updates(values)
+  	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Updates(values)
   	if rs.Error != nil {
   		zlog.Errorf(entity.Ctx, "db update {{.TableName}} error, values:%v, scopes:%v cause:%v", values, scopes, rs.Error)
-  		return 0, outerror.ErrorDbUpdate.Sprintf(rs.Error.Error())
+  		return 0, rs.Error
   	}
   	return rs.RowsAffected, nil
 }
 
 func (entity *{{.BeanName}}Dao) Delete(scopes *WhereScopes) (int64, error) {
-    result := entity.Tx.Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Delete(&AccountInfo{})
+    result := entity.GetDB().Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Delete(&{{ .BeanName }}{})
 	if result.Error != nil {
-	    zlog.Errorf(entity.Ctx, "db Delete {{.TableName}} error, scopes:%v, cause:%v", scopes, rs.Error)
-        return nil, outerror.ErrorDbDelete.Sprintf(rs.Error.Error())
+	    zlog.Errorf(entity.Ctx, "db Delete {{.TableName}} error, scopes:%v, cause:%v", scopes, result.Error)
+        return 0, result.Error
 	}
 	return result.RowsAffected, nil
 }
 
 func (entity *{{.BeanName}}Dao) Get{{ .BeanName }}(scopes *WhereScopes) (*{{ .BeanName }}, error) {
     var info *{{ .BeanName }}
-	rs := entity.GetDB().Scopes(scopes.Scopes...).Find(&info)
+	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).First(&info)
 	if rs.Error == gorm.ErrRecordNotFound {
-   		return nil, nil
+   		return nil, rs.Error
    	}
 	if rs.Error != nil {
 		zlog.Errorf(entity.Ctx, "db get {{.TableName}} error, scopes:%v, cause:%v", scopes, rs.Error)
-		return nil, outerror.ErrorDbSelect.Sprintf(rs.Error.Error())
+		return nil, rs.Error
 	}
 	return info, nil
 }
 
 func (entity *{{.BeanName}}Dao) Get{{ .BeanName }}List (scopes *WhereScopes) ([]*{{ .BeanName }}, error) {
     var data []*{{ .BeanName }}
-	rs := entity.Tx.Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Find(&data)
-	if rs.Error == gorm.ErrRecordNotFound {
-   		return nil, nil
-   	}
+	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Find(&data)
 	if rs.Error != nil {
 		zlog.Errorf(entity.Ctx, "db get list {{.TableName}} error, scopes:%v, cause:%v", scopes, rs.Error)
-		return nil, outerror.ErrorDbSelect.Sprintf(rs.Error.Error())
+		return nil, rs.Error
 	}
 	return data, nil
 }
