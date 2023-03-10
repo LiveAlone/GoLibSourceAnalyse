@@ -14,7 +14,7 @@ clean:
 	rm -rf utils
 
 yapiFull:
-	go run main.go yapi -p brick -f
+	go run main.go yapi -p brick -f -d dest
 
 yapiSingle:
-	go run main.go yapi -p brick -a 319332
+	go run main.go yapi -p brick -a 319332 -d dest

@@ -3,13 +3,22 @@ package util
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Get(requestUrl string, params map[string]string, res interface{}) error {
-	var values url.Values
+type BasicResponse struct {
+	ErrCode int                 `json:"errcode"`
+	ErrMsg  string              `json:"errmsg"`
+	Data    jsoniter.RawMessage `json:"data"`
+}
+
+func Get(requestUrl string, params map[string]string, target interface{}) error {
+	var values url.Values = make(map[string][]string)
 	for k, v := range params {
 		values.Set(k, v)
 	}
@@ -24,5 +33,12 @@ func Get(requestUrl string, params map[string]string, res interface{}) error {
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(buf.Bytes(), res)
+
+	baseResponse := new(BasicResponse)
+	err = jsoniter.Unmarshal(buf.Bytes(), baseResponse)
+	if err != nil || baseResponse.ErrCode != 0 {
+		return errors.New("httpCall" + baseResponse.ErrMsg)
+	}
+
+	return json.Unmarshal(baseResponse.Data, target)
 }
