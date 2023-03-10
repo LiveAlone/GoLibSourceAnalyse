@@ -25,9 +25,7 @@ func ConvertToStructInfo(name, structJson string) []*YapiStructInfo {
 	if err != nil {
 		log.Fatalf("convert to struct info error, json:%v, cause:%v", structJson, err)
 	}
-	var rs []*YapiStructInfo
-
-	return rs
+	return analyseWrapper(name, wrapper)
 }
 
 func analyseWrapper(name string, wrapper *StructWrapper) (rs []*YapiStructInfo) {

@@ -45,11 +45,14 @@ var YapiCmd = &cobra.Command{
 
 func GenerateSingleApi(base *ProjectBaseInfo, api *ProjectApiInfo) {
 	if api.Method != "POST" || api.ReqBodyType != "json" || api.ResBodyType != "json" {
-		fmt.Printf("api type not support ignore title:%v, url:%v", api.Title, api.Path)
+		fmt.Printf("api type not support ignore title:%s, url:%s \n", api.Title, api.Path)
 		return
 	}
 
 	prefix := ToCamelCaseFistLarge(strings.ReplaceAll(strings.TrimPrefix(api.Path, "/"), "/", "_"))
+
+	// todo yqj 分析输入数据结构
+
 	fmt.Println(prefix)
 
 	// yapi 工具转换
