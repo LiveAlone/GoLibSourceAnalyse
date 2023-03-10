@@ -13,6 +13,7 @@ func init() {
 	rootCmd.AddCommand(cmd.WordCmd)
 	rootCmd.AddCommand(cmd.SqlCmd)
 	rootCmd.AddCommand(file_convert.FileConvert)
+	rootCmd.AddCommand(cmd.YapiCmd)
 }
 
 var rootCmd = &cobra.Command{

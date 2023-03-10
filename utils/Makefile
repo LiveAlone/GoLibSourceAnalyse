@@ -12,3 +12,9 @@ convert:
 
 clean:
 	rm -rf utils
+
+yapiFull:
+	go run main.go yapi -p brick -f
+
+yapiSingle:
+	go run main.go yapi -p brick -a 319332
