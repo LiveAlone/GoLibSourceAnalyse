@@ -18,3 +18,6 @@ yapiF:
 
 yapiS:
 	go run main.go yapi -p brick -a 315713 -d dest
+
+apiS:
+	go run main.go api -p brick -a 315713 -d dest

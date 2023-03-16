@@ -1,51 +1,69 @@
 package cmd
 
-//
-//import (
-//	"bytes"
-//	"fmt"
-//	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
-//	"log"
-//	"os"
-//	"strconv"
-//	"strings"
-//
-//	"gopkg.in/yaml.v3"
-//
-//	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
-//	"github.com/spf13/cobra"
-//)
-//
-//var yapiProject string
-//var yapiAllApi bool
-//var api string
-//var yapiDest string
-//
-//var YapiCmd = &cobra.Command{
-//	Use:   "yapi",
-//	Short: "网关层协议生成",
-//	Run: func(cmd *cobra.Command, args []string) {
-//		content, err := os.ReadFile(fmt.Sprintf("%s/%s", yapiDest, "yapi.yaml"))
-//		if err != nil {
-//			log.Fatalf("yaml file read error %v", err)
-//		}
-//		var config YapiConfig
-//		err = yaml.Unmarshal(content, &config)
-//		if err != nil {
-//			log.Fatalf("yaml convert err %v", err)
-//		}
-//		token, ok := config.Token[yapiProject]
-//		if !ok {
-//			log.Fatalf("gain token fail config:%v, project:%v", config, yapiProject)
-//		}
-//
-//		projectInfo := FillProjectInfo(token)
-//		for _, api := range projectInfo.ApiList {
-//			GenerateSingleApi(projectInfo.BaseInfo, api)
-//		}
-//	},
-//}
-//
+import (
+	"fmt"
+	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
+	"log"
+	"os"
+)
+
+var apiProject string
+var apiAllApi bool
+var api string
+var apiDest string
+
+var apiDestConfig *ApiConfig
+
+var ApiCmd = &cobra.Command{
+	Use:   "api",
+	Short: "网关SDK生成",
+	Run: func(cmd *cobra.Command, args []string) {
+		// 初始化配置
+		content, err := os.ReadFile(fmt.Sprintf("%s/%s", apiDest, "api.yaml"))
+		if err != nil {
+			log.Fatalf("yaml file read error %v", err)
+		}
+
+		apiDestConfig := new(ApiConfig)
+		err = yaml.Unmarshal(content, apiDestConfig)
+		if err != nil {
+			log.Fatalf("yaml convert err %v", err)
+		}
+
+		//projectInfo := FillProjectInfo(token)
+		//for _, api := range projectInfo.ApiList {
+		//	GenerateSingleApi(projectInfo.BaseInfo, api)
+		//}
+	},
+}
+
+func init() {
+	ApiCmd.Flags().StringVarP(&apiProject, "project", "p", "", "输入需要生成项目")
+	ApiCmd.Flags().StringVarP(&apiDest, "dest", "d", "", "输入目标文件路径")
+	ApiCmd.Flags().BoolVarP(&apiAllApi, "full", "f", false, "是否全量接口同步")
+	ApiCmd.Flags().StringVarP(&api, "api", "a", "", "输入单个接口列表")
+}
+
+type ApiConfig struct {
+	Token map[string]string `yaml:"token"`
+}
+
+func generateFromApi() {
+
+	// 1. 获取api 信息
+
+	// 2. 本地化工具
+
+	// 3. 初始化结构模版
+
+	//token, ok := config.Token[apiProject]
+	//if !ok {
+	//	log.Fatalf("gain token fail config:%v, project:%v", config, apiProject)
+	//}
+
+}
+
 //func GenerateSingleApi(base *ProjectBaseInfo, api *ProjectApiInfo) {
 //	if api.Method != "POST" || api.ReqBodyType != "json" || api.ResBodyType != "json" {
 //		fmt.Printf("api type not support ignore title:%s, url:%s \n", api.Title, api.Path)
@@ -117,13 +135,6 @@ package cmd
 //	return []byte(data)
 //}
 //
-//func init() {
-//	YapiCmd.Flags().StringVarP(&yapiProject, "project", "p", "", "输入需要生成项目")
-//	YapiCmd.Flags().BoolVarP(&yapiAllApi, "full", "f", false, "是否全量接口同步")
-//	YapiCmd.Flags().StringVarP(&api, "api", "a", "", "输入单个接口列表")
-//	YapiCmd.Flags().StringVarP(&yapiDest, "dest", "d", "", "输入目标文件路径")
-//}
-//
 //func FillProjectInfo(token string) *ProjectInfo {
 //	projectBaseInfo := new(ProjectBaseInfo)
 //	var err error
@@ -188,6 +199,26 @@ package cmd
 //	BaseInfo *ProjectBaseInfo
 //	ApiList  []*ProjectApiInfo
 //}
-//type YapiConfig struct {
-//	Token map[string]string `yaml:"token"`
+//
+//type ProjectBaseInfo struct {
+//	ID       int    `json:"_id"`
+//	Name     string `json:"name"`     // brick
+//	Basepath string `json:"basepath"` // /brick
+//}
+//
+//type ProjectApiInfo struct {
+//	Id           int64  `json:"_id"`
+//	Method       string `json:"method"`
+//	Path         string `json:"path"`
+//	Title        string `json:"title"`
+//	ReqBodyType  string `json:"req_body_type"`
+//	ReqBodyOther string `json:"req_body_other"`
+//	ResBodyType  string `json:"res_body_type"`
+//	ResBody      string `json:"res_body"`
+//}
+//
+//type PageApiInfo struct {
+//	Count int               `json:"count"`
+//	Total int               `json:"total"`
+//	List  []*ProjectApiInfo `json:"list"`
 //}
