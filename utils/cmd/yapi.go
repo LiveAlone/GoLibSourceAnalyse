@@ -49,6 +49,8 @@ func GenerateSingleApi(base *ProjectBaseInfo, api *ProjectApiInfo) {
 		return
 	}
 
+	fmt.Println(base, api)
+
 	prefix := ToCamelCaseFistLarge(strings.ReplaceAll(strings.TrimPrefix(api.Path, "/"), "/", "_"))
 
 	// todo yqj 分析输入数据结构
