@@ -13,8 +13,8 @@ convert:
 clean:
 	rm -rf utils
 
-yapiFull:
+yapiF:
 	go run main.go yapi -p brick -f -d dest
 
-yapiSingle:
-	go run main.go yapi -p brick -a 319332 -d dest
+yapiS:
+	go run main.go yapi -p brick -a 315713 -d dest

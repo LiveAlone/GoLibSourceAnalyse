@@ -25,12 +25,19 @@ func ConvertToStructInfo(name, structJson string) []*YapiStructInfo {
 	if err != nil {
 		log.Fatalf("convert to struct info error, json:%v, cause:%v", structJson, err)
 	}
-	return analyseWrapper(name, wrapper)
+	return analyseWrapper(name, wrapper, true)
 }
 
-func analyseWrapper(name string, wrapper *StructWrapper) (rs []*YapiStructInfo) {
+func analyseWrapper(name string, wrapper *StructWrapper, first bool) (rs []*YapiStructInfo) {
 	if wrapper.Type != "object" {
 		log.Fatalf("analyse not object fail, wrapper:%v, name: %v", wrapper, name)
+	}
+
+	// 去除data层, yapi
+	if first && wrapper.Type == "object" && len(wrapper.Properties) == 3 {
+		if data, ok := wrapper.Properties["data"]; ok {
+			return analyseWrapper(name, data, false)
+		}
 	}
 
 	info := &YapiStructInfo{
@@ -45,13 +52,13 @@ func analyseWrapper(name string, wrapper *StructWrapper) (rs []*YapiStructInfo) 
 			Required:    ContainsForArrayString(wn, wrapper.Required),
 		}
 		if item.TypeName == "object" {
-			curRsList := analyseWrapper(item.Name, w)
+			curRsList := analyseWrapper(item.Name, w, false)
 			rs = append(rs, curRsList...)
 		} else if w.Type == "array" {
 			item.Array = true
 			newW := w.Items
 			if newW.Type == "object" {
-				curRsList := analyseWrapper(item.Name, newW)
+				curRsList := analyseWrapper(item.Name, newW, false)
 				rs = append(rs, curRsList...)
 			}
 			item.TypeName = newW.Type

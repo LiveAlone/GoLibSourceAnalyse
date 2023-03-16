@@ -1,0 +1,18 @@
+package _
+
+import (
+	"git.zuoyebang.cc/huixuexi/classflow/layer"
+)
+
+type {{ .ApiPrefix }}Controller struct {
+	layer.Controller
+	dto *{{ .ApiPrefix }}Req
+}
+
+func (entity *{{ .ApiPrefix }}Controller) GetDtoRequest() interface{} {
+	entity.dto = &{{ .ApiPrefix }}Req{}
+	return entity.dto
+}
+func (entity *{{ .ApiPrefix }}Controller) Action() (interface{}, error) {
+    return nil, nil
+}

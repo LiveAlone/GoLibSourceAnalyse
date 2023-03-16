@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -49,19 +50,69 @@ func GenerateSingleApi(base *ProjectBaseInfo, api *ProjectApiInfo) {
 		return
 	}
 
-	fmt.Println(base, api)
-
 	prefix := ToCamelCaseFistLarge(strings.ReplaceAll(strings.TrimPrefix(api.Path, "/"), "/", "_"))
 
-	// todo yqj 分析输入数据结构
+	var dtoFile bytes.Buffer
+	dtoFile.WriteString("package _\n\n")
+	reqs := util.ConvertToStructInfo(fmt.Sprintf("%sReq", prefix), api.ReqBodyOther)
+	dtoFile.Write(generateDtoStruct(reqs))
 
-	fmt.Println(prefix)
+	res := util.ConvertToStructInfo(fmt.Sprintf("%sRes", prefix), api.ResBody)
+	dtoFile.Write(generateDtoStruct(res))
 
-	// yapi 工具转换
-	fmt.Println(api.ReqBodyOther)
-	fmt.Println(api.ResBody)
+	var err error
+	err = os.WriteFile(fmt.Sprintf("%s/%s_dto.go", yapiDest, prefix), dtoFile.Bytes(), 0666)
+	if err != nil {
+		log.Fatal("write target dto file error", err)
+	}
 
-	// AST 构建生成结构体
+	err = os.WriteFile(fmt.Sprintf("%s/%s_controller.go", yapiDest, prefix), generateControllerStruct(prefix), 0666)
+	if err != nil {
+		log.Fatal("write target dto file error", err)
+	}
+}
+
+func generateDtoStruct(infos []*util.YapiStructInfo) []byte {
+	var sb strings.Builder
+	for _, info := range infos {
+		sb.WriteString(fmt.Sprintf("type %s struct{\n", ToCamelCaseFistLarge(info.StructName)))
+		for _, item := range info.Items {
+
+			convertType := GlobalConf.YapiTypeMap[item.TypeName]
+			if len(convertType) == 0 {
+				convertType = item.TypeName
+			}
+
+			convertName := ToCamelCaseFistLarge(item.Name)
+			if convertType == "object" {
+				convertType = convertName
+			}
+
+			sb.WriteString(fmt.Sprintf("\t%s", convertName))
+			if item.Array {
+				sb.WriteString(fmt.Sprintf("\t[]%s", convertType))
+			} else {
+				sb.WriteString(fmt.Sprintf("\t%s", convertType))
+			}
+			if item.Required {
+				sb.WriteString(fmt.Sprintf("\t`json:\"%s\" binding:\"required\"`", item.Name))
+			}
+			if len(item.Description) > 0 {
+				sb.WriteString(fmt.Sprintf("\t//%s", item.Description))
+			}
+			sb.WriteString("\n")
+		}
+		sb.WriteString("}")
+		sb.WriteString("\n\n")
+	}
+	return []byte(sb.String())
+}
+
+func generateControllerStruct(prefix string) []byte {
+	data := util.GenerateFromTemplate("controller", map[string]string{
+		"ApiPrefix": prefix,
+	}, nil)
+	return []byte(data)
 }
 
 func init() {

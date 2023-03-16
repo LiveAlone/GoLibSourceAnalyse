@@ -16,6 +16,7 @@ type Conf struct {
 	DbTypeMap     map[string]string `yaml:"db_type_map"` // DB
 	GoNullableMap map[string]string `yaml:"go_nullable_map"`
 	DebugMode     bool              // debug 模式输出信息
+	YapiTypeMap   map[string]string `yaml:"yapi_type_map"`
 }
 
 func InitConf() {
