@@ -10,6 +10,11 @@
 2. conf 工具配置数据包
 3. dest 代码生成, 工具运行时刻配置。
 4. util 工具模块
+5. common 通用模块层
+
+- 逻辑层次依赖 main -> cmd -> common -> utils
+- conf 全局配置文件 conf 运行初始化
+- dest 运行时刻配置文件
 
 ### 命令工具
 1. model 数据表转换Dao 查询模型

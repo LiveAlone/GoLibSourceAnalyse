@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
 	"log"
 	"os"
 	"strings"
@@ -42,7 +43,7 @@ var SqlCmd = &cobra.Command{
 		tbs := strings.Split(db.Tables, ",")
 		for _, tb := range tbs {
 			code := GenerateFromTable(db.Url, db.DataBase, tb)
-			fileName := ToSnakeLower(strings.TrimPrefix(tb, "tbl"))
+			fileName := common.ToSnakeLower(strings.TrimPrefix(tb, "tbl"))
 			err = os.WriteFile(fmt.Sprintf("%s/%s.go", targetPath, fileName), []byte(code), 0666)
 			if err != nil {
 				log.Fatalf("tb file write error, err :%v", err)
@@ -64,7 +65,7 @@ type DbConfig struct {
 
 func GenerateFromTable(url, dbName, tableName string) string {
 
-	infomationClient, err := util.NewDBInformationClient(url)
+	infomationClient, err := common.NewDBClient(url)
 	if err != nil {
 		log.Fatalf("db information create fail, err %v", err)
 	}
@@ -108,7 +109,7 @@ func GenerateFromTable(url, dbName, tableName string) string {
 	// 构建数据表结构
 	ms := ModelStruct{
 		TableName: tableName,
-		BeanName:  ToCamelCaseFistLarge(strings.TrimPrefix(tableName, "tbl")),
+		BeanName:  common.ToCamelCaseFistLarge(strings.TrimPrefix(tableName, "tbl")),
 		Columns:   cols,
 		Comment:   table.TableComment,
 	}
@@ -117,8 +118,8 @@ func GenerateFromTable(url, dbName, tableName string) string {
 	fmt.Println(string(ds))
 
 	return util.GenerateFromTemplate("flow", ms, map[string]any{
-		"ToCamelCaseFistLarge": ToCamelCaseFistLarge,
-		"ToCamelCaseFistLower": ToCamelCaseFistLower,
+		"ToCamelCaseFistLarge": common.ToCamelCaseFistLarge,
+		"ToCamelCaseFistLower": common.ToCamelCaseFistLower,
 	})
 }
 

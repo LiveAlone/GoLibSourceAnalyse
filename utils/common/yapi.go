@@ -1,6 +1,7 @@
-package util
+package common
 
 import (
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	"log"
 
 	jsoniter "github.com/json-iterator/go"
@@ -49,7 +50,7 @@ func analyseWrapper(name string, wrapper *StructWrapper, first bool) (rs []*Yapi
 			Name:        wn,
 			TypeName:    w.Type,
 			Description: w.Description,
-			Required:    ContainsForArrayString(wn, wrapper.Required),
+			Required:    util.ContainsForArrayString(wn, wrapper.Required),
 		}
 		if item.TypeName == "object" {
 			curRsList := analyseWrapper(item.Name, w, false)

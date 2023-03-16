@@ -1,13 +1,10 @@
 package cmd
 
 import (
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+	"github.com/spf13/cobra"
 	"log"
 	"strings"
-	"unicode"
-
-	"github.com/gobeam/stringy"
-
-	"github.com/spf13/cobra"
 )
 
 const (
@@ -40,17 +37,17 @@ var WordCmd = &cobra.Command{
 		var content string
 		switch mode {
 		case ModeUpper:
-			content = ToUpper(str)
+			content = common.ToUpper(str)
 		case ModeLower:
-			content = ToLower(str)
+			content = common.ToLower(str)
 		case ModeToCamelCaseFistLarge:
-			content = ToCamelCaseFistLarge(str)
+			content = common.ToCamelCaseFistLarge(str)
 		case ModeToCamelCaseFistLower:
-			content = ToCamelCaseFistLower(str)
+			content = common.ToCamelCaseFistLower(str)
 		case ModeToSnakeLower:
-			content = ToSnakeLower(str)
+			content = common.ToSnakeLower(str)
 		case ModeToSnakeLarge:
-			content = ToSnakeLarge(str)
+			content = common.ToSnakeLarge(str)
 		default:
 			log.Fatalf("暂不支持该转换模式，请执行 help word 查看帮助文档")
 		}
@@ -62,34 +59,4 @@ var WordCmd = &cobra.Command{
 func init() {
 	WordCmd.Flags().StringVarP(&str, "str", "s", "", "请输入单词内容")
 	WordCmd.Flags().Int8VarP(&mode, "mode", "m", 0, "请输入单词转换的模式")
-}
-
-func ToUpper(s string) string {
-	return strings.ToUpper(s)
-}
-
-func ToLower(s string) string {
-	return strings.ToLower(s)
-}
-
-func ToCamelCaseFistLarge(s string) string {
-	return stringy.New(s).CamelCase()
-}
-
-func ToCamelCaseFistLower(s string) string {
-	rs := stringy.New(s).CamelCase()
-	if len(rs) > 0 {
-		return string(unicode.ToLower(rune(rs[0]))) + rs[1:]
-	}
-	return rs
-}
-
-func ToSnakeLower(s string) string {
-	rs := stringy.New(s).SnakeCase().ToLower()
-	return rs
-}
-
-func ToSnakeLarge(s string) string {
-	rs := stringy.New(s).SnakeCase().ToUpper()
-	return rs
 }

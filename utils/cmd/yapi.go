@@ -3,6 +3,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
 	"log"
 	"os"
 	"strconv"
@@ -50,14 +51,14 @@ func GenerateSingleApi(base *ProjectBaseInfo, api *ProjectApiInfo) {
 		return
 	}
 
-	prefix := ToCamelCaseFistLarge(strings.ReplaceAll(strings.TrimPrefix(api.Path, "/"), "/", "_"))
+	prefix := common.ToCamelCaseFistLarge(strings.ReplaceAll(strings.TrimPrefix(api.Path, "/"), "/", "_"))
 
 	var dtoFile bytes.Buffer
 	dtoFile.WriteString("package _\n\n")
-	reqs := util.ConvertToStructInfo(fmt.Sprintf("%sReq", prefix), api.ReqBodyOther)
+	reqs := common.ConvertToStructInfo(fmt.Sprintf("%sReq", prefix), api.ReqBodyOther)
 	dtoFile.Write(generateDtoStruct(reqs))
 
-	res := util.ConvertToStructInfo(fmt.Sprintf("%sRes", prefix), api.ResBody)
+	res := common.ConvertToStructInfo(fmt.Sprintf("%sRes", prefix), api.ResBody)
 	dtoFile.Write(generateDtoStruct(res))
 
 	var err error
@@ -72,10 +73,10 @@ func GenerateSingleApi(base *ProjectBaseInfo, api *ProjectApiInfo) {
 	}
 }
 
-func generateDtoStruct(infos []*util.YapiStructInfo) []byte {
+func generateDtoStruct(infos []*common.YapiStructInfo) []byte {
 	var sb strings.Builder
 	for _, info := range infos {
-		sb.WriteString(fmt.Sprintf("type %s struct{\n", ToCamelCaseFistLarge(info.StructName)))
+		sb.WriteString(fmt.Sprintf("type %s struct{\n", common.ToCamelCaseFistLarge(info.StructName)))
 		for _, item := range info.Items {
 
 			convertType := GlobalConf.YapiTypeMap[item.TypeName]
@@ -83,7 +84,7 @@ func generateDtoStruct(infos []*util.YapiStructInfo) []byte {
 				convertType = item.TypeName
 			}
 
-			convertName := ToCamelCaseFistLarge(item.Name)
+			convertName := common.ToCamelCaseFistLarge(item.Name)
 			if convertType == "object" {
 				convertType = convertName
 			}
@@ -125,7 +126,7 @@ func init() {
 func FillProjectInfo(token string) *ProjectInfo {
 	projectBaseInfo := new(ProjectBaseInfo)
 	var err error
-	err = util.Get("https://yapi.zuoyebang.cc/api/project/get", map[string]string{
+	err = common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/project/get", map[string]string{
 		"token": token,
 	}, projectBaseInfo)
 	if err != nil {
@@ -138,7 +139,7 @@ func FillProjectInfo(token string) *ProjectInfo {
 		page, size := 1, 20
 		for true {
 			pageApiInfo := new(PageApiInfo)
-			err = util.Get("https://yapi.zuoyebang.cc/api/interface/list", map[string]string{
+			err = common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/interface/list", map[string]string{
 				"token":      token,
 				"project_id": strconv.Itoa(projectBaseInfo.ID),
 				"page":       strconv.Itoa(page),
@@ -162,7 +163,7 @@ func FillProjectInfo(token string) *ProjectInfo {
 	}
 	for _, apiId := range apiIds {
 		apiInfo := new(ProjectApiInfo)
-		err = util.Get("https://yapi.zuoyebang.cc/api/interface/get", map[string]string{
+		err = common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/interface/get", map[string]string{
 			"token": token,
 			"id":    apiId,
 		}, apiInfo)
