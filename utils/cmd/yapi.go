@@ -58,6 +58,8 @@ func GenerateSingleApi(base *ProjectBaseInfo, api *ProjectApiInfo) {
 	// yapi 工具转换
 	fmt.Println(api.ReqBodyOther)
 	fmt.Println(api.ResBody)
+
+	// AST 构建生成结构体
 }
 
 func init() {
