@@ -1,54 +1,63 @@
 package yapi
 
-func QueryProjectInfo(token string, apiList string) {
-	//projectBaseInfo := GetProjectInfo(token)
+import (
+	jsoniter "github.com/json-iterator/go"
+	"strconv"
+	"strings"
+)
 
-	//	var apiIds []string
-	//	var apiList []*ProjectApiInfo
-	//	if yapiAllApi {
-	//		page, size := 1, 20
-	//		for true {
-	//			pageApiInfo := new(PageApiInfo)
-	//			err = common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/interface/list", map[string]string{
-	//				"token":      token,
-	//				"project_id": strconv.Itoa(projectBaseInfo.ID),
-	//				"page":       strconv.Itoa(page),
-	//				"size":       strconv.Itoa(size),
-	//			}, pageApiInfo)
-	//			if err != nil {
-	//				log.Fatalf("page api info err:%v", err)
-	//			}
-	//			if len(pageApiInfo.List) == 0 {
-	//				break
-	//			}
-	//			for _, info := range pageApiInfo.List {
-	//				apiIds = append(apiIds, strconv.FormatInt(info.Id, 10))
-	//			}
-	//			page += 1
-	//		}
-	//	}
-	//
-	//	if !yapiAllApi {
-	//		apiIds = strings.Split(strings.TrimSpace(api), ",")
-	//	}
-	//	for _, apiId := range apiIds {
-	//		apiInfo := new(ProjectApiInfo)
-	//		err = common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/interface/get", map[string]string{
-	//			"token": token,
-	//			"id":    apiId,
-	//		}, apiInfo)
-	//		if err != nil {
-	//			log.Fatalf("single api info err:%v", err)
-	//		}
-	//		apiList = append(apiList, apiInfo)
-	//	}
-	//
-	//	if len(apiList) == 0 {
-	//		return nil
-	//	}
-	//
-	//	return &ProjectInfo{
-	//		BaseInfo: projectBaseInfo,
-	//		ApiList:  apiList,
-	//	}
+func QueryProjectInfo(token string, apiIdList string) *ProjectDetailInfo {
+	projectBaseInfo := GetProjectInfo(token)
+
+	var apiIds []string
+	if len(apiIdList) > 0 {
+		apiIds = strings.Split(strings.TrimSpace(apiIdList), ",")
+	} else {
+		page, size := 1, 20
+		for true {
+			pageApiInfo := PageQueryApiInfo(token, projectBaseInfo.ID, page, size)
+			if len(pageApiInfo.List) == 0 {
+				break
+			}
+			for _, info := range pageApiInfo.List {
+				apiIds = append(apiIds, strconv.FormatInt(info.Id, 10))
+			}
+			page += 1
+		}
+	}
+
+	apiList := make([]*ApiInfo, 0, len(apiIds))
+	for _, apiId := range apiIds {
+		interfaceApiInfo := GetInterfaceApi(token, apiId)
+		apiList = append(apiList, interfaceApiInfo)
+	}
+
+	if len(apiList) == 0 {
+		return nil
+	}
+
+	return &ProjectDetailInfo{
+		ProjectInfo: projectBaseInfo,
+		ApiList:     apiList,
+	}
+}
+
+type ProjectDetailInfo struct {
+	ProjectInfo *ProjectInfo
+	ApiList     []*ApiInfo
+}
+
+func ConvertJsonStructWrap(json string) (res *StructWrapper, err error) {
+	res = new(StructWrapper)
+	err = jsoniter.Unmarshal([]byte(json), res)
+	return
+}
+
+// StructWrapper type(object, array, 基础类型)
+type StructWrapper struct {
+	Type        string                    `json:"type"`
+	Properties  map[string]*StructWrapper `json:"properties"`
+	Required    []string                  `json:"required"`
+	Items       *StructWrapper            `json:"items"`
+	Description string                    `json:"description"`
 }
