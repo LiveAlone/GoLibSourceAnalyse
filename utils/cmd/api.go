@@ -63,6 +63,6 @@ func generateFromApi() {
 
 	httpProject := api.DetailToBasicModel(yapiProject)
 
-	// 渲染结构体模版
+	// todo yqj 渲染结构体模版，生成client 和SDK
 	fmt.Println(httpProject)
 }

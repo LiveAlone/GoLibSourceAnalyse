@@ -6,17 +6,8 @@ import (
 )
 
 func TestNone(t *testing.T) {
-	n := new(None)
-	fmt.Println(TwoValue(1, 2, n.ADD))
-}
-
-type None struct {
-}
-
-func (n *None) ADD(a, b int) int {
-	return 100
-}
-
-func TwoValue(a, b int, f func(a, b int) int) int {
-	return f(a, b)
+	arrList := []int{501110, 501111, 501112, 501113, 501116, 501117, 501119, 501121, 501127, 501128}
+	for i := len(arrList) - 1; i >= 0; i-- {
+		fmt.Println(arrList[i])
+	}
 }
