@@ -8,7 +8,8 @@ import (
 )
 
 func Test3(t *testing.T) {
-	err := os.NewSyscallError("", nil)
+	var err error
+	err = os.NewSyscallError("", nil)
 	if err != nil {
 		fmt.Println("gain error")
 	}
