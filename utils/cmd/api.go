@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/yapi"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
@@ -68,11 +69,14 @@ func generateFromApi() {
 	dtoStructs := api.ConvertProjectApisDtoDesc(httpProject.ApiList)
 	fmt.Println(dtoStructs)
 
+	// write dto
 	var content string
 	var err error
 	content = util.GenerateFromTemplate("api/dto", map[string]any{
 		"dtoList": dtoStructs,
-	}, map[string]any{})
+	}, map[string]any{
+		"ToCamelCaseFistLower": common.ToCamelCaseFistLower,
+	})
 	err = util.WriteFile(fmt.Sprintf("%s/%s_dto.go", apiDest, httpProject.Name), []byte(content))
 	if err != nil {
 		log.Fatalf("wirte file error, %v", err)
