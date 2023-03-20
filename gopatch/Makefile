@@ -3,3 +3,4 @@ t1:
 
 t2:
 	gopatch -p t2.patch patch_test.go
+

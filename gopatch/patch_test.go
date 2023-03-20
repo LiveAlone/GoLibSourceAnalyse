@@ -3,8 +3,16 @@ package gopatch
 import (
 	"errors"
 	"fmt"
+	"os"
 	"testing"
 )
+
+func Test3(t *testing.T) {
+	err := os.NewSyscallError("", nil)
+	if err != nil {
+		fmt.Println("gain error")
+	}
+}
 
 func TestNone(t *testing.T) {
 	err := errors.New(fmt.Sprintf("hello"))

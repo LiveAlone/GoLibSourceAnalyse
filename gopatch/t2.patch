@@ -2,5 +2,5 @@
 var x expression
 @@
 
--foo(42)
-+bar(100)
+-foo(x)
++bar(x + 3, true)
