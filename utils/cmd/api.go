@@ -64,8 +64,17 @@ func generateFromApi() {
 
 	httpProject := api.DetailToBasicModel(yapiProject)
 
+	// dto generate
+	dtoStructs := api.ConvertProjectApisDtoDesc(httpProject.ApiList)
+	fmt.Println(dtoStructs)
+
 	var content string
-	content = util.GenerateFromTemplate("api/dto", httpProject, map[string]any{})
-	util.WriteFile(fmt.Sprintf("%s/%s_dto.go", apiDest, httpProject.Name), []byte(content))
-	fmt.Println(httpProject)
+	var err error
+	content = util.GenerateFromTemplate("api/dto", map[string]any{
+		"dtoList": dtoStructs,
+	}, map[string]any{})
+	err = util.WriteFile(fmt.Sprintf("%s/%s_dto.go", apiDest, httpProject.Name), []byte(content))
+	if err != nil {
+		log.Fatalf("wirte file error, %v", err)
+	}
 }

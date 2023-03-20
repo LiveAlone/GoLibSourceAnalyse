@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/yapi"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
@@ -24,7 +23,7 @@ func DetailToBasicModel(detail *yapi.ProjectDetailInfo) *HttpProject {
 			Schema:      "http",
 			Path:        yapiApi.Path,
 			Method:      yapiApi.Method,
-			Prefix:      common.ToCamelCaseFistLarge(strings.ReplaceAll(strings.Trim(yapiApi.Path, "/"), "/", "")),
+			Prefix:      common.ToCamelCaseFistLarge(strings.ReplaceAll(strings.Trim(yapiApi.Path, "/"), "/", "_")),
 			Description: yapiApi.Title,
 			ReqBodyType: yapiApi.ReqBodyType,
 			ResBodyType: yapiApi.ReqBodyType,
@@ -44,21 +43,19 @@ func analyseBodyStruct(yapiApi *yapi.ApiInfo, httpApi *HttpApi) bool {
 	if yapiApi.Method != "GET" && yapiApi.Method != "POST" {
 		return false
 	}
-	reqName := fmt.Sprintf("%sReq", httpApi.Prefix)
 	if yapiApi.Method == "GET" {
-		httpApi.ReqBodyDesc = yapiGetBodyToDesc(reqName, yapiApi.ReqQueryList)
+		httpApi.ReqBodyDesc = yapiGetBodyToDesc("req", yapiApi.ReqQueryList)
 	} else {
 		if yapiApi.ReqBodyType != "json" {
 			return false
 		}
-		httpApi.ReqBodyDesc = yapiJsonBodyToDesc(reqName, yapiApi.ReqBodyOther)
+		httpApi.ReqBodyDesc = yapiJsonBodyToDesc("req", yapiApi.ReqBodyOther)
 	}
 
-	resName := fmt.Sprintf("%sRes", httpApi.Prefix)
 	if yapiApi.ResBodyType != "json" {
 		return false
 	}
-	httpApi.ResBodyDesc = yapiJsonBodyToDesc(resName, yapiApi.ResBody)
+	httpApi.ResBodyDesc = yapiJsonBodyToDesc("res", yapiApi.ResBody)
 	return true
 }
 

@@ -82,13 +82,13 @@ func GenerateFromTable(url, dbName, tableName string) string {
 	// 构建数据转换列表
 	cols := make([]*ModelField, len(columns))
 	for i, column := range columns {
-		fieldType, ok := GlobalConf.DbTypeMap[column.DataType]
+		fieldType, ok := common.GlobalConf.DbTypeMap[column.DataType]
 		if !ok {
 			log.Fatalf("data type not found, db:%s, table:%s, type:%s", dbName, table, column.DataType)
 		}
 
 		if column.IsNullable == "YES" {
-			toFieldType, ok := GlobalConf.GoNullableMap[fieldType]
+			toFieldType, ok := common.GlobalConf.GoNullableMap[fieldType]
 			if !ok {
 				log.Fatalf("go nullable type not found, db:%s, table:%s, go_type:%s nullable tyle:%v", dbName, table, column.DataType, toFieldType)
 			}

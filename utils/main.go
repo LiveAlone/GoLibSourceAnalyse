@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
 	"log"
 
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd"
@@ -21,7 +22,7 @@ var rootCmd = &cobra.Command{
 }
 
 func main() {
-	cmd.InitConf()
+	common.InitConf()
 	err := rootCmd.Execute()
 	if err != nil {
 		log.Fatal(err)

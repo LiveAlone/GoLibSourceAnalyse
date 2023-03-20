@@ -31,3 +31,20 @@ type BodyDesc struct {
 	Array      bool
 	Properties []*BodyDesc
 }
+
+// DtoStructDesc 字段结构体描述信息
+type DtoStructDesc struct {
+	Name         string // 字段名称
+	Example      string
+	Desc         string
+	DtoFieldDesc []*DtoFieldDesc
+}
+
+type DtoFieldDesc struct {
+	Name     string // 字段名称
+	Type     string // 基础类型, 结构体类型, todo swagger format
+	Example  string
+	Desc     string
+	Required bool
+	Array    bool
+}
