@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/yapi"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 	"log"
@@ -27,7 +28,7 @@ var ApiCmd = &cobra.Command{
 			log.Fatalf("yaml file read error %v", err)
 		}
 
-		apiDestConfig := new(ApiConfig)
+		apiDestConfig = new(ApiConfig)
 		err = yaml.Unmarshal(content, apiDestConfig)
 		if err != nil {
 			log.Fatalf("yaml convert err %v", err)
@@ -63,6 +64,8 @@ func generateFromApi() {
 
 	httpProject := api.DetailToBasicModel(yapiProject)
 
-	// todo yqj 渲染结构体模版，生成client 和SDK
+	var content string
+	content = util.GenerateFromTemplate("api/dto", httpProject, map[string]any{})
+	util.WriteFile(fmt.Sprintf("%s/%s_dto.go", apiDest, httpProject.Name), []byte(content))
 	fmt.Println(httpProject)
 }

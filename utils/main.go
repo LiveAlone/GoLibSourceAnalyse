@@ -11,7 +11,7 @@ func init() {
 	rootCmd.AddCommand(cmd.WordCmd)
 	rootCmd.AddCommand(cmd.SqlCmd)
 	rootCmd.AddCommand(cmd.FileConvert)
-	//rootCmd.AddCommand(cmd.YapiCmd)
+	rootCmd.AddCommand(cmd.ApiCmd)
 }
 
 var rootCmd = &cobra.Command{
