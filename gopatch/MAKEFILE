@@ -1,2 +1,2 @@
-p1:
-	gopatch -p s1.patch patch_test.go
+add:
+	gopatch -p t1.patch patch_test.go
