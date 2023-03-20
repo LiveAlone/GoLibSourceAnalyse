@@ -67,11 +67,11 @@ func generateFromApi() {
 
 	// dto generate
 	dtoStructs := api.ConvertProjectApisDtoDesc(httpProject.ApiList)
-	fmt.Println(dtoStructs)
 
-	// write dto
 	var content string
 	var err error
+
+	//write dto
 	content = util.GenerateFromTemplate("api/dto", map[string]any{
 		"dtoList": dtoStructs,
 	}, map[string]any{
@@ -79,6 +79,32 @@ func generateFromApi() {
 	})
 	err = util.WriteFile(fmt.Sprintf("%s/%s_dto.go", apiDest, httpProject.Name), []byte(content))
 	if err != nil {
-		log.Fatalf("wirte file error, %v", err)
+		log.Fatalf("wirte dto file error, %v", err)
+	}
+
+	// write client
+	content = util.GenerateFromTemplate("api/client", map[string]any{
+		"apiList":  httpProject.ApiList,
+		"basePath": httpProject.BasePath,
+		"name":     common.ToCamelCaseFistLarge(httpProject.Name),
+	}, map[string]any{})
+	err = util.WriteFile(fmt.Sprintf("%s/%s_api.go", apiDest, httpProject.Name), []byte(content))
+	if err != nil {
+		log.Fatalf("wirte client file error, %v", err)
+	}
+
+	// cont service
+	for _, httpApi := range httpProject.ApiList {
+		content = util.GenerateFromTemplate("api/control", httpApi, map[string]any{})
+		err = util.WriteFile(fmt.Sprintf("%s/%s_%s_controller.go", apiDest, common.ToSnakeLower(httpApi.Prefix), httpProject.Name), []byte(content))
+		if err != nil {
+			log.Fatalf("wirte file error, %v", err)
+		}
+
+		content = util.GenerateFromTemplate("api/service", httpApi, map[string]any{})
+		err = util.WriteFile(fmt.Sprintf("%s/%s_%s_service.go", apiDest, common.ToSnakeLower(httpApi.Prefix), httpProject.Name), []byte(content))
+		if err != nil {
+			log.Fatalf("wirte file error, %v", err)
+		}
 	}
 }

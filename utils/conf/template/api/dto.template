@@ -1,4 +1,4 @@
-package dto
+package dest
 {{ range .dtoList }}
 //{{ .Name }} {{ .Desc }} {{ .Example }}
 type {{ .Name }} struct{
