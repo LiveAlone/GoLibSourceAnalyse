@@ -1,0 +1,10 @@
+# Replace time.Now().Sub(x) with time.Since(x)
+@@
+# var x is in the metavariable section
+var x identifier
+@@
+
+-time.Now().Sub(x)
++time.Since(x)
+# We replace time.Now().Sub(x)
+# with time.Since(x)

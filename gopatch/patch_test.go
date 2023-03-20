@@ -5,7 +5,13 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 )
+
+func Test5(t *testing.T) {
+	var x time.Time
+	fmt.Println(time.Now().Sub(x))
+}
 
 func Test4(t *testing.T) {
 	err := os.NewSyscallError("", nil)
