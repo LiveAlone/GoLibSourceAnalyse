@@ -7,6 +7,13 @@ import (
 	"testing"
 )
 
+func Test4(t *testing.T) {
+	err := os.NewSyscallError("", nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func test3(t *testing.T) (err error) {
 	err = os.NewSyscallError("", nil)
 	if err != nil {
