@@ -7,12 +7,12 @@ import (
 	"testing"
 )
 
-func Test3(t *testing.T) {
-	var err error
+func test3(t *testing.T) (err error) {
 	err = os.NewSyscallError("", nil)
 	if err != nil {
-		fmt.Println("gain error")
+		return err
 	}
+	return nil
 }
 
 func TestNone(t *testing.T) {

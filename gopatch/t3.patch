@@ -2,8 +2,9 @@
 var f expression
 var err identifier
 @@
+
 -err = f
 -if err != nil {
 +if err := f; err != nil {
-   return err
+    return err
 }
