@@ -9,3 +9,6 @@ t3:
 
 t4:
 	gopatch -p t4.patch patch_test.go
+
+t5:
+	gopatch -p t5.patch patch_test.go
