@@ -1,0 +1,2 @@
+p1:
+	gopatch -p s1.patch patch_test.go
