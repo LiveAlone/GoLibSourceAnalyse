@@ -8,7 +8,9 @@ import (
 )
 
 // 八婺环境私有化域名
-var bawu = "https://bwwx.jhzhjy.cn/"
+var bawu = "https://bwwx.jhzhjy.cn"
+var local = "http://localhost:8080"
+var ship = "http://10.112.106.44:8099"
 
 type PrepareItem struct {
 	SchoolName  string `json:"school_name" binding:"required"`
@@ -20,15 +22,56 @@ type PrepareItem struct {
 }
 
 func main() {
-	syncPrepareData()
+	// 初始化数据
+	//syncPrepareData()
+
+	// 完整数据
+	//err := validateOrg("金华测试小学")
+	//if err != nil {
+	//	log.Fatalf("validate org failed, err: %v", err)
+	//}
+
+	// syncOrg
+	err := syncOrg("金华测试小学")
+	if err != nil {
+		log.Fatalf("sync org failed, err: %v", err)
+	}
 }
 
 func syncOrg(name string) error {
+	rs := map[string]string{
+		"org_name": name,
+	}
+	body, err := jsoniter.Marshal(rs)
+	var response map[string]interface{}
+	err = util.Post(fmt.Sprintf("%s/sjt/sync_org", local), string(body), &response)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("http post success, response: %v \n", response)
 	return nil
 }
 
 func validateOrg(name string) error {
+	rs := map[string]string{
+		"org_name": name,
+	}
+	body, err := jsoniter.Marshal(rs)
+	var response map[string]interface{}
+	err = util.Post(fmt.Sprintf("%s/sjt/validate_org", local), string(body), &response)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("http post success, response: %v \n", response)
 	return nil
+}
+
+func allSchoolList() []string {
+	rs, err := util.ReadFileLines("dest/syncSch.txt")
+	if err != nil {
+		log.Fatalf("read file failed, err: %v", err)
+	}
+	return rs
 }
 
 func syncPrepareData() {
