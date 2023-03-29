@@ -5,7 +5,7 @@ import "testing"
 func TestExcelRead(t *testing.T) {
 	excelFile := "demo.xlsx"
 	sheetIndex := 0
-	data, err := ReadData(excelFile, sheetIndex)
+	data, err := ReadExcelData(excelFile, sheetIndex)
 	if err != nil {
 		t.Error(err)
 	}

@@ -5,7 +5,7 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
-func ReadData(file string, sheetIndex int) (rs [][]string, err error) {
+func ReadExcelData(file string, sheetIndex int) (rs [][]string, err error) {
 	xlFile, err := xlsx.OpenFile(file)
 	if err != nil {
 		return
