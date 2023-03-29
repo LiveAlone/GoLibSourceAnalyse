@@ -5,8 +5,10 @@ import (
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	jsoniter "github.com/json-iterator/go"
 	"log"
-	"testing"
 )
+
+// 八婺环境私有化域名
+var bawu = "https://bwwx.jhzhjy.cn/"
 
 type PrepareItem struct {
 	SchoolName  string `json:"school_name" binding:"required"`
@@ -17,10 +19,21 @@ type PrepareItem struct {
 	Phone       string `json:"phone" binding:"required"`
 }
 
-// 生成sql脚本
-func TestTeacherSJTSql(t *testing.T) {
+func main() {
+	syncPrepareData()
+}
+
+func syncOrg(name string) error {
+	return nil
+}
+
+func validateOrg(name string) error {
+	return nil
+}
+
+func syncPrepareData() {
 	// 脚本执行
-	excelFile := "dest/data.xlsx"
+	excelFile := "dest/current.xlsx"
 	datas, err := util.ReadExcelData(excelFile, 0)
 	if err != nil {
 		log.Fatalf("read excel data failed, err: %v", err)
@@ -31,13 +44,9 @@ func TestTeacherSJTSql(t *testing.T) {
 		if i == 0 {
 			continue
 		}
-		if i > 10 {
-			break
-		}
 		if len(data) < 9 || len(data[8]) == 0 {
 			break
 		}
-
 		entity := PrepareItem{
 			SchoolName:  data[1],
 			GradeName:   data[2],
@@ -46,23 +55,22 @@ func TestTeacherSJTSql(t *testing.T) {
 			UserName:    data[5],
 			Phone:       data[7],
 		}
-
 		rs = append(rs, entity)
 	}
 
-	for _, item := range rs {
+	itemTaskList := util.SplitArray(rs, 100)
+	for i, items := range itemTaskList {
 		body, err := jsoniter.Marshal(map[string][]PrepareItem{
-			"item_list": {item},
+			"item_list": items,
 		})
 		if err != nil {
 			log.Fatalf("json marshal failed, err: %v", err)
 		}
 		rs := make(map[string]interface{})
-		err = util.Post("http://localhost:8080/sjt/prepare_data", string(body), &rs)
+		err = util.Post("http://10.112.106.44:8099/sjt/prepare_data", string(body), &rs)
 		if err != nil {
 			log.Fatalf("http post failed, err: %v", err)
 		}
-		fmt.Printf("http post success, rs: %v", rs)
-		break
+		fmt.Printf("http post success, index:%v rs: %v \n", i, rs)
 	}
 }
