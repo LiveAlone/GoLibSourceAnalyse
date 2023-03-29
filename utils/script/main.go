@@ -10,7 +10,7 @@ import (
 // 八婺环境私有化域名
 var bawu = "https://bwwx.jhzhjy.cn"
 var local = "http://localhost:8080"
-var ship = "http://10.112.106.44:8099"
+var ship = "http://10.112.25.138:8099"
 
 type PrepareItem struct {
 	SchoolName  string `json:"school_name" binding:"required"`
@@ -26,13 +26,13 @@ func main() {
 	//syncPrepareData()
 
 	// 完整数据
-	//err := validateOrg("金华测试小学")
+	//err := validateOrg("东阳市江北上卢初级中学")
 	//if err != nil {
 	//	log.Fatalf("validate org failed, err: %v", err)
 	//}
 
-	// syncOrg
-	err := syncOrg("金华测试小学")
+	//syncOrg
+	err := syncOrg("东阳市江北上卢初级中学")
 	if err != nil {
 		log.Fatalf("sync org failed, err: %v", err)
 	}
@@ -44,7 +44,7 @@ func syncOrg(name string) error {
 	}
 	body, err := jsoniter.Marshal(rs)
 	var response map[string]interface{}
-	err = util.Post(fmt.Sprintf("%s/sjt/sync_org", local), string(body), &response)
+	err = util.Post(fmt.Sprintf("%s/sjt/sync_org", ship), string(body), &response)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func validateOrg(name string) error {
 	}
 	body, err := jsoniter.Marshal(rs)
 	var response map[string]interface{}
-	err = util.Post(fmt.Sprintf("%s/sjt/validate_org", local), string(body), &response)
+	err = util.Post(fmt.Sprintf("%s/sjt/validate_org", ship), string(body), &response)
 	if err != nil {
 		return err
 	}
