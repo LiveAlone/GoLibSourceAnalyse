@@ -21,21 +21,44 @@ type PrepareItem struct {
 	Phone       string `json:"phone" binding:"required"`
 }
 
+var notFoundSchool = []string{
+	"义乌市义亭镇铜溪学校",
+	"义乌市复光实验学校（小学部）",
+	"武义县白姆乡中心小学",
+	"东阳市花园外国语学校(小学部)",
+	"义乌市铜溪学校（初中部）",
+	"义乌市复光实验学校（初中部）",
+	"义乌市枫叶学校",
+	"永康市教师进修学校附属小学",
+	"永康市教师进修学校附属初中",
+	"金华市金师附小教育集团婺城小学白沙溪校区",
+}
+
 func main() {
-	// 初始化数据
+	//初始化数据
 	//syncPrepareData()
 
-	// 完整数据
-	//err := validateOrg("东阳市江北上卢初级中学")
+	//完整数据
+	//schList := allSchoolList()
+	//for index, sch := range schList {
+	//	err := validateOrg(sch)
+	//	if err != nil {
+	//		log.Fatalf("sync org failed, err: %v", err)
+	//	}
+	//	fmt.Println(index, "success sch", sch)
+	//}
+
+	// 测试学校: 1. 金华测试小学 2. 东阳市江北上卢初级中学
+	//err := validateOrg("金华测试小学")
 	//if err != nil {
 	//	log.Fatalf("validate org failed, err: %v", err)
 	//}
 
 	//syncOrg
-	err := syncOrg("东阳市江北上卢初级中学")
-	if err != nil {
-		log.Fatalf("sync org failed, err: %v", err)
-	}
+	//err := syncOrg("东阳市江北上卢初级中学")
+	//if err != nil {
+	//	log.Fatalf("sync org failed, err: %v", err)
+	//}
 }
 
 func syncOrg(name string) error {
@@ -44,7 +67,7 @@ func syncOrg(name string) error {
 	}
 	body, err := jsoniter.Marshal(rs)
 	var response map[string]interface{}
-	err = util.Post(fmt.Sprintf("%s/sjt/sync_org", ship), string(body), &response)
+	err = util.Post(fmt.Sprintf("%s/sjt/sync_org", bawu), string(body), &response)
 	if err != nil {
 		return err
 	}
@@ -58,7 +81,7 @@ func validateOrg(name string) error {
 	}
 	body, err := jsoniter.Marshal(rs)
 	var response map[string]interface{}
-	err = util.Post(fmt.Sprintf("%s/sjt/validate_org", ship), string(body), &response)
+	err = util.Post(fmt.Sprintf("%s/trans/sjt/validate_org", bawu), string(body), &response)
 	if err != nil {
 		return err
 	}
@@ -101,7 +124,7 @@ func syncPrepareData() {
 		rs = append(rs, entity)
 	}
 
-	itemTaskList := util.SplitArray(rs, 100)
+	itemTaskList := util.SplitArray(rs, 250)
 	for i, items := range itemTaskList {
 		body, err := jsoniter.Marshal(map[string][]PrepareItem{
 			"item_list": items,
@@ -110,7 +133,7 @@ func syncPrepareData() {
 			log.Fatalf("json marshal failed, err: %v", err)
 		}
 		rs := make(map[string]interface{})
-		err = util.Post("http://10.112.106.44:8099/sjt/prepare_data", string(body), &rs)
+		err = util.Post(fmt.Sprintf("%s/trans/sjt/prepare_data", bawu), string(body), &rs)
 		if err != nil {
 			log.Fatalf("http post failed, err: %v", err)
 		}
