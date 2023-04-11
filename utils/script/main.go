@@ -10,7 +10,7 @@ import (
 // 八婺环境私有化域名
 var bawu = "https://bwwx.jhzhjy.cn"
 var local = "http://localhost:8080"
-var ship = "http://10.112.97.201:8099"
+var ship = "http://10.104.131.145:8099"
 
 type PrepareItem struct {
 	SchoolName  string `json:"school_name" binding:"required"`
@@ -54,10 +54,13 @@ func main() {
 	//	log.Fatalf("validate org failed, err: %v", err)
 	//}
 
-	// 金华测试小学 浙江师范大学附属小学
-	err := syncOrg("浙江师范大学附属小学")
-	if err != nil {
-		log.Fatalf("sync org failed, err: %v", err)
+	schList := allSchoolList()
+	for index, sch := range schList {
+		err := syncOrg(sch)
+		if err != nil {
+			log.Fatalf("sync org failed, err: %v", err)
+		}
+		fmt.Println(index, "success sch", sch)
 	}
 }
 
