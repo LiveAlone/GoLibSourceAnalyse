@@ -1,4 +1,4 @@
-package _
+package controller
 
 import (
 	"git.zuoyebang.cc/huixuexi/classflow/layer"
