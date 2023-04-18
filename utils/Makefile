@@ -13,11 +13,8 @@ convert:
 clean:
 	rm -rf utils
 
-yapiF:
-	go run main.go yapi -p brick -f -d dest
-
-yapiS:
-	go run main.go yapi -p brick -a 315713 -d dest
-
-apiS:
+api-brick:
 	go run main.go api -p brick -a 315713 -d dest
+
+api-hxxmis:
+	go run main.go api -p hxxmis -a 643585 -d dest
