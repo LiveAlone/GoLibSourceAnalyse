@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	brownfox "github.com/LiveAlone/GoLibSourceAnalyse/codes/manage"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -16,24 +15,24 @@ var dir string
 var jump = &cobra.Command{
 	Use: "jump",
 	Run: func(cmd *cobra.Command, args []string) {
-		bf := brownfox.NewBrownFox(dir, -1)
-		if err := bf.Backup(); err != nil {
-			panic(err)
-		}
-		if err := bf.Inject(); err != nil {
-			panic(err)
-		}
+		//bf := brownfox.NewBrownFox(dir, -1)
+		//if err := bf.Backup(); err != nil {
+		//	panic(err)
+		//}
+		//if err := bf.Inject(); err != nil {
+		//	panic(err)
+		//}
 	},
 }
 
 var over = &cobra.Command{
 	Use: "over",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("over")
-		bf := brownfox.NewBrownFox(dir, -1)
-		if err := bf.Restore(); err != nil {
-			panic(err)
-		}
+		//fmt.Println("over")
+		//bf := brownfox.NewBrownFox(dir, -1)
+		//if err := bf.Restore(); err != nil {
+		//	panic(err)
+		//}
 	},
 }
 
