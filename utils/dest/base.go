@@ -246,8 +246,8 @@ func (cond CondItem) Check() (err error) {
 	return
 }
 
-// 条件处理
-func buildWhere(db *gorm.DB, conds []CondItem) (outDb *gorm.DB, err error) {
+// BuildWhere 条件处理
+func BuildWhere(db *gorm.DB, conds []CondItem) (outDb *gorm.DB, err error) {
 	outDb = db
 	if len(conds) == 0 {
 		return

@@ -14,7 +14,7 @@ func QueryProjectInfo(token string, apiIdList string) *ProjectDetailInfo {
 		apiIds = strings.Split(strings.TrimSpace(apiIdList), ",")
 	} else {
 		page, size := 1, 20
-		for true {
+		for {
 			pageApiInfo := PageQueryApiInfo(token, projectBaseInfo.ID, page, size)
 			if len(pageApiInfo.List) == 0 {
 				break

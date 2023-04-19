@@ -34,8 +34,7 @@ type ProjectInfo struct {
 
 func GetProjectInfo(token string) *ProjectInfo {
 	projectBaseInfo := new(ProjectInfo)
-	var err error
-	err = common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/project/get", map[string]string{
+	err := common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/project/get", map[string]string{
 		"token": token,
 	}, projectBaseInfo)
 	if err != nil {
