@@ -1,12 +1,11 @@
-package inject
+package patch
 
 import (
 	"bytes"
-	"github.com/LiveAlone/GoLibSourceAnalyse/codes/file"
+	"github.com/pkg/errors"
 	"go/parser"
 	"go/printer"
 	"go/token"
-	"io/ioutil"
 	"os"
 	pkgPath "path"
 	"runtime"
@@ -24,28 +23,30 @@ func NewDogHelper(path, pkg string) *DogHelper {
 		pkg:  pkg,
 	}
 }
-func (d *DogHelper) WriteDogHelper() {
-
+func (d *DogHelper) WriteDogHelper() error {
 	_, filename, _, _ := runtime.Caller(0)
 
 	fset := token.NewFileSet()
-	fbytes, err := ioutil.ReadFile(pkgPath.Join(pkgPath.Dir(filename)) + "/dogHelper.go")
+	fbytes, err := os.ReadFile(pkgPath.Join(pkgPath.Dir(filename)) + "/dogHelper.go")
 	if err != nil {
-		panic(err)
+		return errors.Wrap(err, "read dogHelper.go error")
 	}
 	f, err := parser.ParseFile(fset, "dogHelper.go", fbytes, 0)
 	if err != nil {
-		panic(err)
+		return errors.Wrap(err, "parse dogHelper.go error")
 	}
 
 	f.Name.Name = d.pkg
 
 	var buf bytes.Buffer
-	printer.Fprint(&buf, fset, f)
-	if err := ioutil.WriteFile(genPath(d.path, d.pkg), buf.Bytes(), os.ModePerm); err != nil {
-		panic(err)
+	err = printer.Fprint(&buf, fset, f)
+	if err != nil {
+		return errors.Wrap(err, "printer fprint error")
 	}
-
+	if err := os.WriteFile(genPath(d.path, d.pkg), buf.Bytes(), os.ModePerm); err != nil {
+		return errors.Wrap(err, "write dogHelper.go error")
+	}
+	return nil
 }
 
 func (d *DogHelper) EraseDogHelper() error {
@@ -57,5 +58,5 @@ func genPath(path, pkg string) string {
 	if !strings.HasSuffix(path, "/") && len(path) != 0 {
 		suffix = "/"
 	}
-	return path + suffix + "gen_" + pkg + file.HelperSuffix
+	return path + suffix + "gen_" + pkg + HelperSuffix
 }

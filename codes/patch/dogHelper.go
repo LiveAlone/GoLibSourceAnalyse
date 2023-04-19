@@ -1,4 +1,4 @@
-package inject
+package patch
 
 import (
 	"fmt"

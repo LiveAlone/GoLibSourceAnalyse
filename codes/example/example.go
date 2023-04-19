@@ -4,4 +4,5 @@ import "github.com/LiveAlone/GoLibSourceAnalyse/codes/example/service"
 
 func main() {
 	service.Foo()
+	service.BFoo()
 }

@@ -1,5 +1,5 @@
-jump:
-	go run cmd/inject.go jump -d example
+p:
+	go run cmd/patch.go patch -d example
 
-over:
-	go run cmd/inject.go over -d example
+r:
+	go run cmd/patch.go recover -d example
