@@ -8,8 +8,6 @@ import (
 	"log"
 )
 
-const Token = "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"
-
 func main() {
 	c, err := utils.NewClient(true)
 	if err != nil {

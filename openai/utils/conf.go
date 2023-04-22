@@ -6,25 +6,22 @@ import (
 	"os"
 )
 
-const ConfPath = "conf/config.yml"
+const SecretConfPath = "conf/secret.yml"
 
-var GlobalConf Conf
+var SecretConf Conf
 
 func init() {
-	confContent, err := os.ReadFile(ConfPath)
+	confContent, err := os.ReadFile(SecretConfPath)
 	if err != nil {
-		log.Fatalf("read conf faile error, paht:%v, cause %v", ConfPath, err)
+		log.Fatalf("read conf faile error, paht:%v, cause %v", SecretConfPath, err)
 	}
-	err = yaml.Unmarshal(confContent, &GlobalConf)
+	err = yaml.Unmarshal(confContent, &SecretConf)
 	if err != nil {
 		log.Fatalf("init conf yaml analyse error, content:%s, cause:%v", confContent, err)
 	}
 }
 
 type Conf struct {
-	OpenAi map[string]string `yaml:"openai"` // open ai
-}
-
-func GetOpenAiConfig(key string) string {
-	return GlobalConf.OpenAi[key]
+	Token string `yaml:"token"`
+	Proxy string `yaml:"proxy"`
 }

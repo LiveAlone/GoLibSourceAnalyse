@@ -7,10 +7,10 @@ import (
 )
 
 func NewClient(proxy bool) (*openai.Client, error) {
-	defaultConfig := openai.DefaultConfig(GetOpenAiConfig("token"))
+	defaultConfig := openai.DefaultConfig(SecretConf.Token)
 
 	if proxy {
-		proxyUrl, err := url.Parse(GetOpenAiConfig("proxy"))
+		proxyUrl, err := url.Parse(SecretConf.Proxy)
 		if err != nil {
 			return nil, err
 		}
