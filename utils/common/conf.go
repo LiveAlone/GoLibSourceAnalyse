@@ -7,7 +7,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const ConfPath = "conf/conf.yaml"
+const ConfPath = "conf/config.yaml"
 
 var GlobalConf Conf
 

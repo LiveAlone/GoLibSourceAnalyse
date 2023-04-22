@@ -3,21 +3,22 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/LiveAlone/GoLibSourceAnalyse/openai/utils"
 	"github.com/sashabaranov/go-openai"
+	"log"
 )
 
 const Token = "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"
 
 func main() {
-	c := openai.NewClient(Token)
-	ctx := context.Background()
-
-	req := openai.CompletionRequest{
-		Model:       openai.GPT3Ada,
-		Prompt:      "Lorem ipsum",
-		Temperature: 0.6,
+	c, err := utils.NewClient(true)
+	if err != nil {
+		log.Fatal(err)
 	}
-	resp, err := c.CreateCompletion(ctx, req)
+	resp, err := c.CreateCompletion(context.Background(), openai.CompletionRequest{
+		Model:  openai.GPT3TextDavinci003,
+		Prompt: "给我的狗启个名字",
+	})
 	if err != nil {
 		fmt.Printf("Completion error: %v\n", err)
 		return
