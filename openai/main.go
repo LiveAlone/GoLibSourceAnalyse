@@ -8,5 +8,10 @@ func main() {
 	//examples.Chat35Turbo()
 	//examples.Chat35TurboStream()
 
-	examples.Chat3Ada()
+	//examples.Chat3Ada()
+
+	examples.GenerateImage()
+	//examples.GenerateImageURL()
+
+	//examples.CompletionSupportContext()
 }
