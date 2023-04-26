@@ -22,7 +22,7 @@ func GenerateImage() {
 
 	//Example image as base64
 	reqBase64 := openai.ImageRequest{
-		Prompt:         "米老鼠和唐老鸭,卡通人物,动画细节",
+		Prompt:         "松子",
 		Size:           openai.CreateImageSize512x512,
 		ResponseFormat: openai.CreateImageResponseFormatB64JSON,
 		N:              1,
@@ -71,7 +71,7 @@ func GenerateImageURL() {
 	ctx := context.Background()
 	// Sample image by link
 	reqUrl := openai.ImageRequest{
-		Prompt:         "美女吃冰淇淋",
+		Prompt:         "美女",
 		Size:           openai.CreateImageSize512x512,
 		ResponseFormat: openai.CreateImageResponseFormatURL,
 		N:              1,
