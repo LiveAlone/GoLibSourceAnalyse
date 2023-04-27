@@ -22,8 +22,8 @@ func GenerateImage() {
 
 	//Example image as base64
 	reqBase64 := openai.ImageRequest{
-		Prompt:         "松子",
-		Size:           openai.CreateImageSize512x512,
+		Prompt:         "",
+		Size:           openai.CreateImageSize1024x1024,
 		ResponseFormat: openai.CreateImageResponseFormatB64JSON,
 		N:              1,
 	}
