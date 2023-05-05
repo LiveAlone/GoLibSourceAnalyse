@@ -26,7 +26,7 @@ func Web() {
 			AsRoute(NewEchoHandler),
 			AsRoute(NewHelloHandler),
 			zap.NewExample),
-		//fx.Invoke(func(*http.Server) {}),
+		fx.Invoke(func(*http.Server) {}),
 	).Run()
 }
 
