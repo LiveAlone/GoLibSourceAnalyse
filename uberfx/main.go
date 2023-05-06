@@ -1,11 +1,10 @@
 package main
 
-import "github.com/LiveAlone/GoLibSourceAnalyse/uberfx/start"
-
-type Hello interface {
-}
+import "github.com/LiveAlone/GoLibSourceAnalyse/uberfx/source"
 
 func main() {
-	start.MiniPro()
+	//start.MiniPro()
 	//start.Web()
+
+	source.Source()
 }
