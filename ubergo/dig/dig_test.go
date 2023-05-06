@@ -9,7 +9,35 @@ import (
 	"testing"
 )
 
-type TestOpt struct {
+type MyService struct {
+	Name string
+}
+
+func TestDecorate(t *testing.T) {
+	c := dig.New()
+
+	var err error
+	err = c.Provide(func() *MyService {
+		return &MyService{Name: "foo"}
+	})
+	if err != nil {
+		log.Fatalf("Failed to provide config: %v", err)
+	}
+
+	err = c.Decorate(func(s *MyService) *MyService {
+		s.Name = "bar"
+		return s
+	})
+	if err != nil {
+		log.Fatalf("Failed to provide config: %v", err)
+	}
+
+	err = c.Invoke(func(s *MyService) {
+		fmt.Println(s.Name)
+	})
+	if err != nil {
+		log.Fatalf("Failed to invoke: %v", err)
+	}
 }
 
 func TestFirst(t *testing.T) {
