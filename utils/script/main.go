@@ -37,9 +37,6 @@ func main() {
 	// bawu : 2000252463
 	var totalResult = make([]string, 0)
 	for i, schId := range schIds {
-		if !(i > 500 && i <= 550) {
-			continue
-		}
 
 		totalResult = append(totalResult, fmt.Sprintf("# schId %s \n", schId))
 		rs, err := GenerateSchSql(db, schId)
