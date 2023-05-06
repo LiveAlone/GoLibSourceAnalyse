@@ -6,6 +6,6 @@ type Hello interface {
 }
 
 func main() {
-	//start.MiniPro()
-	start.Web()
+	start.MiniPro()
+	//start.Web()
 }

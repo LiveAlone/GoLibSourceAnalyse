@@ -37,6 +37,10 @@ func main() {
 	// bawu : 2000252463
 	var totalResult = make([]string, 0)
 	for i, schId := range schIds {
+		if !(i > 500 && i <= 550) {
+			continue
+		}
+
 		totalResult = append(totalResult, fmt.Sprintf("# schId %s \n", schId))
 		rs, err := GenerateSchSql(db, schId)
 		if err != nil {
@@ -55,7 +59,7 @@ func main() {
 
 func GenerateSchSql(db *gorm.DB, schId string) (rs []string, err error) {
 	subjectTeacherList := make([]SubjectTeacher, 0)
-	tx := db.Table("tblSubjectTeacher").Where("school_id = ? ", schId).Scan(&subjectTeacherList)
+	tx := db.Table("tblSubjectTeacher").Where("school_id = ? and status = 1", schId).Scan(&subjectTeacherList)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}

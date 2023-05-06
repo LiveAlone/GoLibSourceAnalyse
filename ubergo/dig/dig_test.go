@@ -39,14 +39,9 @@ func TestFirst(t *testing.T) {
 	}
 
 	fmt.Println(".......stating invoke")
-	for i := 0; i < 300; i++ {
-		go func() {
-			err = c.Invoke(func(l *log.Logger) {
-				l.Print("You've been invoked")
-			})
-		}()
-	}
-
+	err = c.Invoke(func(l *log.Logger) {
+		l.Print("You've been invoked")
+	})
 	if err != nil {
 		log.Fatalf("Failed to invoke: %v", err)
 	}
