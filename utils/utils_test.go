@@ -1,17 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestNone(t *testing.T) {
-	PrintLocal()
+	t.Log("current version is ", Version)
+	Version = "1.0.1"
+	t.Log("current version is ", Version)
 }
 
-func PrintLocal() (rs int) {
-	defer func() {
-		fmt.Println(rs)
-	}()
-	return 100
+func TestV2(t *testing.T) {
+	t.Log("current version is ", Version)
+	Version = "2.0.1"
+	t.Log("current version is ", Version)
 }

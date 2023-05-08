@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Version = "1.0.0"
+
 func init() {
 	rootCmd.AddCommand(cmd.WordCmd)
 	rootCmd.AddCommand(cmd.SqlCmd)
