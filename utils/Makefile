@@ -18,3 +18,6 @@ api-brick:
 
 api-hxxmis:
 	go run main.go api -p hxxmis -a 643396 -d dest
+
+api-unit:
+	go run main.go api -p unit -a 670477 -d dest
