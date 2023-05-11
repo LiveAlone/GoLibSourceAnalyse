@@ -12,7 +12,7 @@ func CommandProvider() (*cobra.Command, error) {
 		Long:  "个人项目工具",
 	}
 
-	rootCmd.AddCommand(cmd.WordCmd)
+	rootCmd.AddCommand(cmd.NewWordCmd())
 	rootCmd.AddCommand(cmd.SqlCmd)
 	rootCmd.AddCommand(cmd.FileConvert)
 	rootCmd.AddCommand(cmd.ApiCmd)
