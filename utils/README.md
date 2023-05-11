@@ -1,8 +1,11 @@
-## 工具项目开发支持
+# 工具项目开发支持
+
+### fx 做依赖管理
+1. logger ```DEBUG``` 输出应用级别日志
 
 ### 依赖模块
 1. gorm mysql 支持 db 数据查询
-2. corba 支持命令行方式执行
+2. corba 支持命令行方式执行 
 3. stringy 支持word case 转换
 
 ### 模块解析

@@ -1,5 +1,8 @@
-add:
-	git add . && git commit -m "none"
+help:
+	go run main.go -h
+
+helpD:
+	go run main.go -D -h
 
 model:
 	go run main.go model -d dest

@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd"
+	"fmt"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/appfx"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
@@ -9,40 +10,22 @@ import (
 	"go.uber.org/zap"
 )
 
-var Version = "1.0.0"
-
-func init() {
-	rootCmd.AddCommand(cmd.WordCmd)
-	rootCmd.AddCommand(cmd.SqlCmd)
-	rootCmd.AddCommand(cmd.FileConvert)
-	rootCmd.AddCommand(cmd.ApiCmd)
-}
-
-var rootCmd = &cobra.Command{
-	Use:   "utils",
-	Short: "utils",
-	Long:  "个人项目工具",
-}
-
 func main() {
 	fx.New(
+		fx.Provide(appfx.AppConstruct()...),
 		fx.WithLogger(
 			func(logger *zap.Logger) fxevent.Logger {
 				return &fxevent.ZapLogger{Logger: logger}
-			}),
-		fx.Provide(
-			// 日志注册
-			zap.NewNop,
+			},
 		),
-		fx.Invoke(func(shut fx.Shutdowner, log *zap.Logger) {
-			common.InitConf()
+		fx.Invoke(func(shut fx.Shutdowner, conf *common.Conf, rootCmd *cobra.Command) {
 			err := rootCmd.Execute()
 			if err != nil {
-				log.Error("rootCmd.Execute error", zap.Error(err))
+				fmt.Printf("rootCmd.Execute error %v", zap.Error(err))
 			}
 			err = shut.Shutdown()
 			if err != nil {
-				log.Error("shutdown error", zap.Error(err))
+				fmt.Printf("shutdown error %v", zap.Error(err))
 			}
 		}),
 	).Run()
