@@ -1,6 +1,5 @@
 help:
 	go run main.go -h
-
 helpD:
 	go run main.go -D -h
 
