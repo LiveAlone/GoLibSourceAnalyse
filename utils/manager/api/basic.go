@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"log"
 )
 
@@ -57,7 +58,7 @@ func toStructName(prefix string, name string) string {
 }
 
 func toStructType(fromType string) string {
-	toType, ok := common.GlobalConf.ApiTypeMap[fromType]
+	toType, ok := config.GlobalConf.ApiTypeMap[fromType]
 	if !ok {
 		log.Fatalf("api from type not found :%v", fromType)
 	}

@@ -1,11 +1,13 @@
 package appfx
 
-import "github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+import (
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
+)
 
 func AppConstruct() []interface{} {
 	depConstruct := []interface{}{
-		common.NewGlobalConfig, // 全局配置
-		UtilsLogger,            // 全局日志
+		config.NewConfigLoader, config.NewGlobalConfig, // 全局配置
+		UtilsLogger, // 全局日志
 	}
 
 	// 命令行

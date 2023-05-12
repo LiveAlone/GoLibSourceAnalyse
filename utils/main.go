@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/appfx"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
@@ -18,7 +18,7 @@ func main() {
 				return &fxevent.ZapLogger{Logger: logger}
 			},
 		),
-		fx.Invoke(func(shut fx.Shutdowner, conf *common.Conf, rootCmd *cobra.Command) {
+		fx.Invoke(func(shut fx.Shutdowner, globalConfig *config.Conf, rootCmd *cobra.Command) {
 			err := rootCmd.Execute()
 			if err != nil {
 				fmt.Printf("rootCmd.Execute error %v", zap.Error(err))
