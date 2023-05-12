@@ -28,6 +28,7 @@ func WriteFileLines(path string, lines []string) error {
 	data := make([]byte, 0)
 	for _, line := range lines {
 		data = append(data, line...)
+		data = append(data, '\n')
 	}
 	return os.WriteFile(path, data, 0644)
 }

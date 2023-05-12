@@ -26,16 +26,23 @@ var desc = strings.Join([]string{
 	"6：转下划线大写",
 }, "\n")
 
+type WordParam struct {
+	str  string
+	mode int8
+}
+
+var wordParam = new(WordParam)
+
 func NewWordCmd() *cobra.Command {
-	var str string
-	var mode int8
+
 	wordCmd := &cobra.Command{
 		Use:   "word",
 		Short: "单词格式转换",
 		Long:  desc,
 		Run: func(cmd *cobra.Command, args []string) {
 			var content string
-			switch mode {
+			var str = wordParam.str
+			switch wordParam.mode {
 			case ModeUpper:
 				content = common.ToUpper(str)
 			case ModeLower:
@@ -55,8 +62,7 @@ func NewWordCmd() *cobra.Command {
 			log.Printf("输出结果: %s", content)
 		},
 	}
-
-	wordCmd.Flags().StringVarP(&str, "str", "s", "", "请输入单词内容")
-	wordCmd.Flags().Int8VarP(&mode, "mode", "m", 0, "请输入单词转换的模式")
+	wordCmd.Flags().StringVarP(&wordParam.str, "str", "s", "", "请输入单词内容")
+	wordCmd.Flags().Int8VarP(&wordParam.mode, "mode", "m", 0, "请输入单词转换的模式")
 	return wordCmd
 }

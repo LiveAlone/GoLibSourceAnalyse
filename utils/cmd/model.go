@@ -17,40 +17,40 @@ import (
 
 var targetPath string
 
-func init() {
-	SqlCmd.Flags().StringVarP(&targetPath, "dest", "d", "", "文件生成目标地址")
-}
-
-var SqlCmd = &cobra.Command{
-	Use:   "model",
-	Short: "Dao持久化层生成代码",
-	Long:  "dest持久化生成地址，db.yaml 配置文件",
-	Run: func(cmd *cobra.Command, args []string) {
-		// 配置文件读取
-		fmt.Println("数据表目标地址: ", targetPath)
-		content, err := os.ReadFile(fmt.Sprintf("%s/%s", targetPath, "db.yaml"))
-		if err != nil {
-			log.Fatalf("yaml file read error %v", err)
-		}
-		var config SqlModelConfig
-		err = yaml.Unmarshal(content, &config)
-		if err != nil {
-			log.Fatalf("yaml convert err %v", err)
-		}
-
-		// 数据表生成
-		db := config.Db
-		tbs := strings.Split(db.Tables, ",")
-		for _, tb := range tbs {
-			code := GenerateFromTable(db.Url, db.DataBase, tb)
-			fileName := common.ToSnakeLower(strings.TrimPrefix(tb, "tbl"))
-			err = os.WriteFile(fmt.Sprintf("%s/%s.go", targetPath, fileName), []byte(code), 0666)
+func NewModelCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "model",
+		Short: "Dao持久化层生成代码",
+		Long:  "dest持久化生成地址，db.yaml 配置文件",
+		Run: func(cmd *cobra.Command, args []string) {
+			// 配置文件读取
+			fmt.Println("数据表目标地址: ", targetPath)
+			content, err := os.ReadFile(fmt.Sprintf("%s/%s", targetPath, "db.yaml"))
 			if err != nil {
-				log.Fatalf("tb file write error, err :%v", err)
+				log.Fatalf("yaml file read error %v", err)
 			}
-			fmt.Println("数据表Model 生成完成: ", tb)
-		}
-	},
+			var config SqlModelConfig
+			err = yaml.Unmarshal(content, &config)
+			if err != nil {
+				log.Fatalf("yaml convert err %v", err)
+			}
+
+			// 数据表生成
+			db := config.Db
+			tbs := strings.Split(db.Tables, ",")
+			for _, tb := range tbs {
+				code := GenerateFromTable(db.Url, db.DataBase, tb)
+				fileName := common.ToSnakeLower(strings.TrimPrefix(tb, "tbl"))
+				err = os.WriteFile(fmt.Sprintf("%s/%s.go", targetPath, fileName), []byte(code), 0666)
+				if err != nil {
+					log.Fatalf("tb file write error, err :%v", err)
+				}
+				fmt.Println("数据表Model 生成完成: ", tb)
+			}
+		},
+	}
+	cmd.Flags().StringVarP(&targetPath, "dest", "d", "", "文件生成目标地址")
+	return cmd
 }
 
 type SqlModelConfig struct {
