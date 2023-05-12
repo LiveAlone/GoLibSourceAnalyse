@@ -72,7 +72,7 @@ func main() {
 		if tx.Error != nil {
 			log.Fatalf("query match record error:%v", tx.Error)
 		}
-		sql := fmt.Sprintf("insert into tblSjtSchoolArea(school_id, area_code, area_name) values (%s, %d, '%s');\n", record.YunsiOrgId, entity.AreaCode, entity.AreaName)
+		sql := fmt.Sprintf("insert into tblSjtSchoolArea(school_id, area_code, area_name) values (%s, %d, '%s');", record.YunsiOrgId, entity.AreaCode, entity.AreaName)
 		rs = append(rs, sql)
 		fmt.Println(i, "finish with sql", sql)
 	}
