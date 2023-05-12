@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/yapi"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	"log"
@@ -23,7 +23,7 @@ func DetailToBasicModel(detail *yapi.ProjectDetailInfo) *HttpProject {
 			Schema:      "http",
 			Path:        yapiApi.Path,
 			Method:      yapiApi.Method,
-			Prefix:      common.ToCamelCaseFistLarge(strings.ReplaceAll(strings.Trim(yapiApi.Path, "/"), "/", "_")),
+			Prefix:      domain.ToCamelCaseFistLarge(strings.ReplaceAll(strings.Trim(yapiApi.Path, "/"), "/", "_")),
 			Description: yapiApi.Title,
 			ReqBodyType: yapiApi.ReqBodyType,
 			ResBodyType: yapiApi.ReqBodyType,

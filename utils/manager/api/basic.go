@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"log"
 )
@@ -25,7 +25,7 @@ func ConvertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDes
 			loopDesc := ConvertBodyDescToDtoDesc(prefix, property)
 			rs = append(rs, loopDesc...)
 			fields = append(fields, &DtoFieldDesc{
-				Name:     common.ToCamelCaseFistLarge(property.Name),
+				Name:     domain.ToCamelCaseFistLarge(property.Name),
 				Type:     toStructName(prefix, property.Name),
 				Example:  property.Example,
 				Desc:     property.Desc,
@@ -34,7 +34,7 @@ func ConvertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDes
 			})
 		} else {
 			fields = append(fields, &DtoFieldDesc{
-				Name:     common.ToCamelCaseFistLarge(property.Name),
+				Name:     domain.ToCamelCaseFistLarge(property.Name),
 				Type:     toStructType(property.Type),
 				Example:  property.Example,
 				Desc:     property.Desc,
@@ -54,7 +54,7 @@ func ConvertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDes
 }
 
 func toStructName(prefix string, name string) string {
-	return prefix + common.ToCamelCaseFistLarge(name)
+	return prefix + domain.ToCamelCaseFistLarge(name)
 }
 
 func toStructType(fromType string) string {

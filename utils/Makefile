@@ -1,3 +1,9 @@
+# build
+build:
+	go build main.go -o main
+clean:
+	rm -rf main && go clean
+
 help:
 	go run main.go -h
 helpD:

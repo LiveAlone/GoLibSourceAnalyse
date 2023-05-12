@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/spf13/cobra"
 	"log"
 	"strings"
@@ -44,17 +44,17 @@ func NewWordCmd() *cobra.Command {
 			var str = wordParam.str
 			switch wordParam.mode {
 			case ModeUpper:
-				content = common.ToUpper(str)
+				content = domain.ToUpper(str)
 			case ModeLower:
-				content = common.ToLower(str)
+				content = domain.ToLower(str)
 			case ModeToCamelCaseFistLarge:
-				content = common.ToCamelCaseFistLarge(str)
+				content = domain.ToCamelCaseFistLarge(str)
 			case ModeToCamelCaseFistLower:
-				content = common.ToCamelCaseFistLower(str)
+				content = domain.ToCamelCaseFistLower(str)
 			case ModeToSnakeLower:
-				content = common.ToSnakeLower(str)
+				content = domain.ToSnakeLower(str)
 			case ModeToSnakeLarge:
-				content = common.ToSnakeLarge(str)
+				content = domain.ToSnakeLarge(str)
 			default:
 				log.Fatalf("暂不支持该转换模式，请执行 help word 查看帮助文档")
 			}

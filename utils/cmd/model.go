@@ -3,7 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/mysql"
 	"log"
@@ -42,7 +42,7 @@ func NewModelCmd() *cobra.Command {
 			tbs := strings.Split(db.Tables, ",")
 			for _, tb := range tbs {
 				code := GenerateFromTable(db.Url, db.DataBase, tb)
-				fileName := common.ToSnakeLower(strings.TrimPrefix(tb, "tbl"))
+				fileName := domain.ToSnakeLower(strings.TrimPrefix(tb, "tbl"))
 				err = os.WriteFile(fmt.Sprintf("%s/%s.go", targetPath, fileName), []byte(code), 0666)
 				if err != nil {
 					log.Fatalf("tb file write error, err :%v", err)
@@ -111,7 +111,7 @@ func GenerateFromTable(url, dbName, tableName string) string {
 	// 构建数据表结构
 	ms := ModelStruct{
 		TableName: tableName,
-		BeanName:  common.ToCamelCaseFistLarge(strings.TrimPrefix(tableName, "tbl")),
+		BeanName:  domain.ToCamelCaseFistLarge(strings.TrimPrefix(tableName, "tbl")),
 		Columns:   cols,
 		Comment:   table.TableComment,
 	}
@@ -120,8 +120,8 @@ func GenerateFromTable(url, dbName, tableName string) string {
 	fmt.Println(string(ds))
 
 	return util.GenerateFromTemplate("basic", ms, map[string]any{
-		"ToCamelCaseFistLarge": common.ToCamelCaseFistLarge,
-		"ToCamelCaseFistLower": common.ToCamelCaseFistLower,
+		"ToCamelCaseFistLarge": domain.ToCamelCaseFistLarge,
+		"ToCamelCaseFistLower": domain.ToCamelCaseFistLower,
 	})
 }
 
