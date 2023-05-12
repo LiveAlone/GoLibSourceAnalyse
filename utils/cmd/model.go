@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/mysql"
 	"log"
 	"os"
 	"strings"
@@ -66,7 +67,7 @@ type DbConfig struct {
 
 func GenerateFromTable(url, dbName, tableName string) string {
 
-	infomationClient, err := common.NewDBClient(url)
+	infomationClient, err := mysql.NewTableSchemaAnalyser(url)
 	if err != nil {
 		log.Fatalf("db information create fail, err %v", err)
 	}

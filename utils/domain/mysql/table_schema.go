@@ -1,9 +1,6 @@
-package common
+package mysql
 
-import (
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type TableInfoColumn struct {
 	ColumnName    string `gorm:"column:COLUMN_NAME" json:"column_name"`
@@ -20,9 +17,25 @@ type TableInfo struct {
 	TableComment string `gorm:"column:TABLE_COMMENT"`
 }
 
+type TableSchemaAnalyser struct {
+	DbUrl  string
+	Client *DBClient
+}
+
+func NewTableSchemaAnalyser(url string) (*TableSchemaAnalyser, error) {
+	client, err := NewDBClient(url)
+	if err != nil {
+		return nil, err
+	}
+	return &TableSchemaAnalyser{
+		DbUrl:  url,
+		Client: client,
+	}, nil
+}
+
 // QueryTable 查询数据表基础信息
-func (entity *DBClient) QueryTable(databaseName, table string) (tb *TableInfo, err error) {
-	err = entity.Query("TABLES", &tb, func(db *gorm.DB) *gorm.DB {
+func (entity *TableSchemaAnalyser) QueryTable(databaseName, table string) (tb *TableInfo, err error) {
+	err = entity.Client.Query("TABLES", &tb, func(db *gorm.DB) *gorm.DB {
 		return db.Where("TABLE_SCHEMA = ? and TABLE_NAME = ?", databaseName, table)
 	})
 	if err != nil {
@@ -31,31 +44,12 @@ func (entity *DBClient) QueryTable(databaseName, table string) (tb *TableInfo, e
 	return tb, nil
 }
 
-func (entity *DBClient) QueryColumns(databaseName, table string) (rs []*TableInfoColumn, err error) {
-	err = entity.Query("COLUMNS", &rs, func(db *gorm.DB) *gorm.DB {
+func (entity *TableSchemaAnalyser) QueryColumns(databaseName, table string) (rs []*TableInfoColumn, err error) {
+	err = entity.Client.Query("COLUMNS", &rs, func(db *gorm.DB) *gorm.DB {
 		return db.Where("TABLE_SCHEMA = ? and TABLE_NAME = ? order by ORDINAL_POSITION", databaseName, table)
 	})
 	if err != nil {
 		return nil, err
 	}
 	return rs, nil
-}
-
-type DBClient struct {
-	db *gorm.DB
-}
-
-func NewDBClient(dbUrl string) (*DBClient, error) {
-	db, err := gorm.Open(mysql.Open(dbUrl), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-	return &DBClient{
-		db: db,
-	}, nil
-}
-
-func (entity *DBClient) Query(table string, result interface{}, where ...func(db *gorm.DB) *gorm.DB) error {
-	err := entity.db.Table(table).Scopes(where...).Find(result).Error
-	return err
 }
