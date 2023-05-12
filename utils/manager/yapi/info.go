@@ -1,7 +1,7 @@
 package yapi
 
 import (
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/common"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/http"
 	"log"
 	"strconv"
 )
@@ -14,7 +14,7 @@ type PageApiInfo struct {
 
 func PageQueryApiInfo(token string, projectId, page, size int) *PageApiInfo {
 	pageApiInfo := new(PageApiInfo)
-	err := common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/interface/list", map[string]string{
+	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/interface/list", map[string]string{
 		"token":      token,
 		"project_id": strconv.Itoa(projectId),
 		"page":       strconv.Itoa(page),
@@ -34,7 +34,7 @@ type ProjectInfo struct {
 
 func GetProjectInfo(token string) *ProjectInfo {
 	projectBaseInfo := new(ProjectInfo)
-	err := common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/project/get", map[string]string{
+	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/project/get", map[string]string{
 		"token": token,
 	}, projectBaseInfo)
 	if err != nil {
@@ -64,7 +64,7 @@ type ReqQueryItem struct {
 
 func GetInterfaceApi(token, apiId string) *ApiInfo {
 	apiInfo := new(ApiInfo)
-	err := common.GetWithErrorCodeResp("https://yapi.zuoyebang.cc/api/interface/get", map[string]string{
+	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/interface/get", map[string]string{
 		"token": token,
 		"id":    apiId,
 	}, apiInfo)
