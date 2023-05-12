@@ -1,6 +1,6 @@
 # build
 build:
-	go build main.go -o main
+	go build -o main main.go
 clean:
 	rm -rf main && go clean
 
