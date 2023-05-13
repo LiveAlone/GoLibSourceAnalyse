@@ -39,7 +39,7 @@ func (w *WrapHttp) GetRequest(url string, params map[string]string, result any) 
 	return jsoniter.Unmarshal(entity, result)
 }
 
-// NoneWrapDecoder 无封装
+// NoneWrapDecoder 无封装返回结果
 type NoneWrapDecoder struct{}
 
 func (n *NoneWrapDecoder) data(source []byte) ([]byte, error) {
