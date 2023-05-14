@@ -16,7 +16,7 @@ func NewConfigLoader() *Loader {
 	return &Loader{}
 }
 
-func (l *Loader) loadConfigToEntity(path string, entity any) error {
+func (l *Loader) LoadConfigToEntity(path string, entity any) error {
 	paths := strings.Split(path, ".")
 	if !supportFile(paths[len(paths)-1]) {
 		return errors.New(fmt.Sprintf("not support file type %s", path))

@@ -6,7 +6,7 @@ var GlobalConf Conf
 
 // NewGlobalConfig 初始化全局配置
 func NewGlobalConfig(loader *Loader) (*Conf, error) {
-	err := loader.loadConfigToEntity(ConfPath, &GlobalConf)
+	err := loader.LoadConfigToEntity(ConfPath, &GlobalConf)
 	if err != nil {
 		return nil, err
 	}
