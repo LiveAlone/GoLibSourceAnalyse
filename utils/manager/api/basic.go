@@ -6,15 +6,28 @@ import (
 	"log"
 )
 
+// SchemaGen 基于APISchema 生成code
+type SchemaGen struct {
+}
+
+func NewSchemaGen() *SchemaGen {
+	return &SchemaGen{}
+}
+
+// GenFromYapi 通过生成code
+func (s *SchemaGen) GenFromYapi(token string, allApi bool, apiList []string) (rs map[string]string, err error) {
+	return nil, err
+}
+
 func ConvertProjectApisDtoDesc(apiList []*HttpApi) (rs []*DtoStructDesc) {
 	for _, api := range apiList {
-		rs = append(rs, ConvertBodyDescToDtoDesc(api.Prefix, api.ReqBodyDesc)...)
-		rs = append(rs, ConvertBodyDescToDtoDesc(api.Prefix, api.ResBodyDesc)...)
+		rs = append(rs, convertBodyDescToDtoDesc(api.Prefix, api.ReqBodyDesc)...)
+		rs = append(rs, convertBodyDescToDtoDesc(api.Prefix, api.ResBodyDesc)...)
 	}
 	return
 }
 
-func ConvertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDesc) {
+func convertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDesc) {
 	if desc.Type != "object" {
 		log.Fatalf("dto desc convert error, body:%v", desc)
 	}
@@ -22,7 +35,7 @@ func ConvertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDes
 	fields := make([]*DtoFieldDesc, 0)
 	for _, property := range desc.Properties {
 		if property.Type == "object" {
-			loopDesc := ConvertBodyDescToDtoDesc(prefix, property)
+			loopDesc := convertBodyDescToDtoDesc(prefix, property)
 			rs = append(rs, loopDesc...)
 			fields = append(fields, &DtoFieldDesc{
 				Name:     domain.ToCamelCaseFistLarge(property.Name),

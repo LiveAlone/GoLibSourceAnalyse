@@ -3,13 +3,12 @@ package cmd
 import (
 	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/yapi"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 	"log"
-	"os"
 )
 
 type ApiParam struct {
@@ -20,34 +19,25 @@ type ApiParam struct {
 }
 
 var apiParam = new(ApiParam)
-var apiDestConfig *ApiConfig
 
-func NewApiParam() *cobra.Command {
+func NewApiParam(configLoader *config.Loader) *cobra.Command {
 	apiCmd := &cobra.Command{
 		Use:   "api",
 		Short: "网关SDK生成",
 		Run: func(cmd *cobra.Command, args []string) {
 			// 初始化配置
-			content, err := os.ReadFile(fmt.Sprintf("%s/%s", apiParam.dest, "api.yaml"))
+			apiDestConfig := new(ApiConfig)
+			err := configLoader.LoadConfigToEntity(fmt.Sprintf("%s/%s", apiParam.dest, "api.yaml"), apiDestConfig)
 			if err != nil {
 				log.Fatalf("yaml file read error %v", err)
 			}
-
-			apiDestConfig = new(ApiConfig)
-			err = yaml.Unmarshal(content, apiDestConfig)
-			if err != nil {
-				log.Fatalf("yaml convert err %v", err)
-			}
-
-			generateFromApi()
+			generateFromApi(apiDestConfig.Token[apiParam.project])
 		},
 	}
-
 	apiCmd.Flags().StringVarP(&apiParam.project, "project", "p", "", "输入需要生成项目")
 	apiCmd.Flags().StringVarP(&apiParam.dest, "dest", "d", "", "输入目标文件路径")
 	apiCmd.Flags().BoolVarP(&apiParam.allApi, "full", "f", false, "是否全量接口同步")
 	apiCmd.Flags().StringVarP(&apiParam.list, "api", "a", "", "输入单个接口列表")
-
 	return apiCmd
 }
 
@@ -55,9 +45,8 @@ type ApiConfig struct {
 	Token map[string]string `yaml:"token"`
 }
 
-func generateFromApi() {
-	token, ok := apiDestConfig.Token[apiParam.project]
-	if !ok {
+func generateFromApi(token string) {
+	if len(token) == 0 {
 		log.Fatalf("project fail get token, projet:%v", apiParam.project)
 	}
 

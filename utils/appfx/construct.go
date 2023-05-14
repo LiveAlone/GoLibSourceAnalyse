@@ -3,6 +3,7 @@ package appfx
 import (
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/template"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/model"
 )
 
@@ -22,6 +23,9 @@ func AppConstruct() []interface{} {
 
 	// db 模型
 	depConstruct = append(depConstruct, model.NewSchemaInformationGen)
+
+	// api gen
+	depConstruct = append(depConstruct, api.NewSchemaGen)
 
 	return depConstruct
 }

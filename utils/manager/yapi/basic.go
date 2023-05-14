@@ -7,7 +7,7 @@ import (
 )
 
 func QueryProjectInfo(token string, apiIdList string) *ProjectDetailInfo {
-	projectBaseInfo := GetProjectInfo(token)
+	projectBaseInfo := getProjectInfo(token)
 
 	var apiIds []string
 	if len(apiIdList) > 0 {
@@ -15,7 +15,7 @@ func QueryProjectInfo(token string, apiIdList string) *ProjectDetailInfo {
 	} else {
 		page, size := 1, 20
 		for {
-			pageApiInfo := PageQueryApiInfo(token, projectBaseInfo.ID, page, size)
+			pageApiInfo := pageQueryApiInfo(token, projectBaseInfo.ID, page, size)
 			if len(pageApiInfo.List) == 0 {
 				break
 			}
@@ -28,7 +28,7 @@ func QueryProjectInfo(token string, apiIdList string) *ProjectDetailInfo {
 
 	apiList := make([]*ApiInfo, 0, len(apiIds))
 	for _, apiId := range apiIds {
-		interfaceApiInfo := GetInterfaceApi(token, apiId)
+		interfaceApiInfo := getInterfaceApi(token, apiId)
 		apiList = append(apiList, interfaceApiInfo)
 	}
 

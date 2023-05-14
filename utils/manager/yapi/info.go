@@ -12,7 +12,7 @@ type PageApiInfo struct {
 	List  []*ApiInfo `json:"list"`
 }
 
-func PageQueryApiInfo(token string, projectId, page, size int) *PageApiInfo {
+func pageQueryApiInfo(token string, projectId, page, size int) *PageApiInfo {
 	pageApiInfo := new(PageApiInfo)
 	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/interface/list", map[string]string{
 		"token":      token,
@@ -32,7 +32,7 @@ type ProjectInfo struct {
 	Basepath string `json:"basepath"` // /brick
 }
 
-func GetProjectInfo(token string) *ProjectInfo {
+func getProjectInfo(token string) *ProjectInfo {
 	projectBaseInfo := new(ProjectInfo)
 	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/project/get", map[string]string{
 		"token": token,
@@ -62,7 +62,7 @@ type ReqQueryItem struct {
 	Required string `json:"required"`
 }
 
-func GetInterfaceApi(token, apiId string) *ApiInfo {
+func getInterfaceApi(token, apiId string) *ApiInfo {
 	apiInfo := new(ApiInfo)
 	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/interface/get", map[string]string{
 		"token": token,
