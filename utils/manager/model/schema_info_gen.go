@@ -31,6 +31,7 @@ func (s *SchemaInformationGen) Gen(url string, db string, tableList []string) (r
 		return nil, err
 	}
 
+	rs = make(map[string]string)
 	for _, tableName := range tableList {
 		ms, err := convertModelStruct(db, tableName, analyser)
 		if err != nil {

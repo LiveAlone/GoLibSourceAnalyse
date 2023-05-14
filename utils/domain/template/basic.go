@@ -13,7 +13,7 @@ import (
 
 var structNameTemplateMap = map[string]string{
 	"HelloTemplate": "hello",
-	"ModelStruct":   "model/basic",
+	"ModelStruct":   "model/flow",
 }
 
 // Generator 模版生成器
