@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/model"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/db"
 	"log"
 	"strings"
 
@@ -15,7 +15,7 @@ import (
 
 var targetPath string
 
-func NewModelCmd(configLoader *config.Loader, gen *model.SchemaInformationGen) *cobra.Command {
+func NewModelCmd(configLoader *config.Loader, gen *db.SchemaInformationGen) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "model",
 		Short: "Dao持久化层生成代码",

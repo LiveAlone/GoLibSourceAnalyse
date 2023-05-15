@@ -5,7 +5,7 @@ import (
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/template"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api/yapi"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/model"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/db"
 )
 
 func AppConstruct() []interface{} {
@@ -23,7 +23,7 @@ func AppConstruct() []interface{} {
 	depConstruct = append(depConstruct, template.NewGenerator)
 
 	// db 模型
-	depConstruct = append(depConstruct, model.NewSchemaInformationGen)
+	depConstruct = append(depConstruct, db.NewSchemaInformationGen)
 
 	// api gen
 	depConstruct = append(depConstruct,

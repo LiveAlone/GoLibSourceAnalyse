@@ -3,6 +3,7 @@ package db
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/bo"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/mysql"
@@ -54,7 +55,7 @@ func (s *SchemaInformationGen) Gen(url string, db string, tableList []string) (r
 	return
 }
 
-func convertModelStruct(dbName, tableName string, analyser *mysql.TableSchemaAnalyser) (*template.ModelStruct, error) {
+func convertModelStruct(dbName, tableName string, analyser *mysql.TableSchemaAnalyser) (*bo.ModelStruct, error) {
 	columns, err := analyser.QueryColumns(dbName, tableName)
 	if err != nil {
 		return nil, err
@@ -65,7 +66,7 @@ func convertModelStruct(dbName, tableName string, analyser *mysql.TableSchemaAna
 	}
 
 	// 构建数据转换列表
-	cols := make([]*template.ModelField, len(columns))
+	cols := make([]*bo.ModelField, len(columns))
 	for i, column := range columns {
 		fieldType, ok := config.GlobalConf.DbTypeMap[column.DataType]
 		if !ok {
@@ -85,14 +86,14 @@ func convertModelStruct(dbName, tableName string, analyser *mysql.TableSchemaAna
 			fieldType = "datatypes.JSON"
 		}
 
-		cols[i] = &template.ModelField{
+		cols[i] = &bo.ModelField{
 			ColumnName: column.ColumnName,
 			FieldType:  fieldType,
 			Comment:    column.ColumnComment,
 		}
 	}
 
-	return &template.ModelStruct{
+	return &bo.ModelStruct{
 		TableName: tableName,
 		BeanName:  domain.ToCamelCaseFistLarge(strings.TrimPrefix(tableName, "tbl")),
 		Columns:   cols,

@@ -1,7 +1,7 @@
 package yapi
 
 import (
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/model"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/bo"
 )
 
 type ApiClient struct{}
@@ -10,7 +10,7 @@ func NewApiClient() *ApiClient {
 	return &ApiClient{}
 }
 
-func (y *ApiClient) QueryHttpProjectInfo(token string, apiIdList string) (*model.HttpProject, error) {
+func (y *ApiClient) QueryHttpProjectInfo(token string, apiIdList string) (*bo.HttpProject, error) {
 	yapiProjectInfo, err := y.QueryYapiProjectInfo(token, apiIdList)
 	if err != nil {
 		return nil, err

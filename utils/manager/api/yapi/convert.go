@@ -1,26 +1,26 @@
 package yapi
 
 import (
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/bo"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/model"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	jsoniter "github.com/json-iterator/go"
 	"log"
 	"strings"
 )
 
-func DetailToBasicModel(detail *ProjectDetailInfo) *model.HttpProject {
+func DetailToBasicModel(detail *ProjectDetailInfo) *bo.HttpProject {
 	yapiProjectInfo := detail.ProjectInfo
-	res := &model.HttpProject{
+	res := &bo.HttpProject{
 		ID:       yapiProjectInfo.ID,
 		Title:    "",
 		Name:     yapiProjectInfo.Name,
 		BasePath: yapiProjectInfo.Basepath,
 	}
 
-	apiList := make([]*model.HttpApi, 0)
+	apiList := make([]*bo.HttpApi, 0)
 	for _, yapiApi := range detail.ApiList {
-		httpApi := &model.HttpApi{
+		httpApi := &bo.HttpApi{
 			Schema:      "http",
 			Path:        yapiApi.Path,
 			Method:      yapiApi.Method,
@@ -40,7 +40,7 @@ func DetailToBasicModel(detail *ProjectDetailInfo) *model.HttpProject {
 	return res
 }
 
-func analyseBodyStruct(yapiApi *ApiInfo, httpApi *model.HttpApi) bool {
+func analyseBodyStruct(yapiApi *ApiInfo, httpApi *bo.HttpApi) bool {
 	if yapiApi.Method != "GET" && yapiApi.Method != "POST" {
 		return false
 	}
@@ -60,7 +60,7 @@ func analyseBodyStruct(yapiApi *ApiInfo, httpApi *model.HttpApi) bool {
 	return true
 }
 
-func yapiJsonBodyToDesc(name, jsonDesc string) *model.BodyDesc {
+func yapiJsonBodyToDesc(name, jsonDesc string) *bo.BodyDesc {
 	yapiWrapper, err := ConvertJsonStructWrap(jsonDesc)
 	if err != nil {
 		log.Fatalf("yapi json convert error, json:%v, err:%v", jsonDesc, err)
@@ -68,7 +68,7 @@ func yapiJsonBodyToDesc(name, jsonDesc string) *model.BodyDesc {
 	return yapiAnalyseWrapper(name, yapiWrapper, true)
 }
 
-func yapiAnalyseWrapper(name string, wrapper *StructWrapper, first bool) *model.BodyDesc {
+func yapiAnalyseWrapper(name string, wrapper *StructWrapper, first bool) *bo.BodyDesc {
 	if wrapper.Type != "object" {
 		log.Fatalf("analyse not object fail, wrapper:%v, name: %v", wrapper, name)
 	}
@@ -80,7 +80,7 @@ func yapiAnalyseWrapper(name string, wrapper *StructWrapper, first bool) *model.
 		}
 	}
 
-	rs := &model.BodyDesc{
+	rs := &bo.BodyDesc{
 		Name:     name,
 		Type:     wrapper.Type,
 		Example:  "",
@@ -104,7 +104,7 @@ func yapiAnalyseWrapper(name string, wrapper *StructWrapper, first bool) *model.
 				item.Array = true
 				rs.Properties = append(rs.Properties, item)
 			} else {
-				item := &model.BodyDesc{
+				item := &bo.BodyDesc{
 					Name:     wn,
 					Type:     newW.Type,
 					Desc:     newW.Description,
@@ -114,7 +114,7 @@ func yapiAnalyseWrapper(name string, wrapper *StructWrapper, first bool) *model.
 				rs.Properties = append(rs.Properties, item)
 			}
 		} else {
-			item := &model.BodyDesc{
+			item := &bo.BodyDesc{
 				Name:     wn,
 				Type:     w.Type,
 				Desc:     w.Description,
@@ -141,13 +141,13 @@ func ConvertJsonStructWrap(json string) (res *StructWrapper, err error) {
 	return
 }
 
-func yapiGetBodyToDesc(name string, items []*ReqQueryItem) *model.BodyDesc {
+func yapiGetBodyToDesc(name string, items []*ReqQueryItem) *bo.BodyDesc {
 	if len(items) == 0 {
 		return nil
 	}
-	itemDescList := make([]*model.BodyDesc, len(items))
+	itemDescList := make([]*bo.BodyDesc, len(items))
 	for _, item := range items {
-		itemDescList = append(itemDescList, &model.BodyDesc{
+		itemDescList = append(itemDescList, &bo.BodyDesc{
 			Name:     item.Name,
 			Type:     "string",
 			Example:  item.Example,
@@ -155,7 +155,7 @@ func yapiGetBodyToDesc(name string, items []*ReqQueryItem) *model.BodyDesc {
 			Required: item.Required == "1",
 		})
 	}
-	return &model.BodyDesc{
+	return &bo.BodyDesc{
 		Name:       name,
 		Type:       "object",
 		Properties: itemDescList,
