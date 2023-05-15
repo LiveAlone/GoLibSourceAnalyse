@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/template"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/yapi"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	"github.com/spf13/cobra"
 	"log"
@@ -20,7 +20,7 @@ type ApiParam struct {
 
 var apiParam = new(ApiParam)
 
-func NewApiParam(configLoader *config.Loader) *cobra.Command {
+func NewApiParam(configLoader *config.Loader, gen *api.SchemaApiGen, templateGen *template.Generator) *cobra.Command {
 	apiCmd := &cobra.Command{
 		Use:   "api",
 		Short: "网关SDK生成",
@@ -31,7 +31,7 @@ func NewApiParam(configLoader *config.Loader) *cobra.Command {
 			if err != nil {
 				log.Fatalf("yaml file read error %v", err)
 			}
-			generateFromApi(apiDestConfig.Token[apiParam.project])
+			generateFromApi(apiDestConfig.Token[apiParam.project], gen, templateGen)
 		},
 	}
 	apiCmd.Flags().StringVarP(&apiParam.project, "project", "p", "", "输入需要生成项目")
@@ -45,43 +45,45 @@ type ApiConfig struct {
 	Token map[string]string `yaml:"token"`
 }
 
-func generateFromApi(token string) {
+func generateFromApi(token string, gen *api.SchemaApiGen, templateGen *template.Generator) {
 	if len(token) == 0 {
 		log.Fatalf("project fail get token, projet:%v", apiParam.project)
 	}
 
-	var yapiProject *yapi.ProjectDetailInfo
-	if apiParam.allApi {
-		yapiProject = yapi.QueryProjectInfo(token, "")
-	} else {
-		yapiProject = yapi.QueryProjectInfo(token, apiParam.list)
-	}
+	var content string
+	var err error
 
-	httpProject := api.DetailToBasicModel(yapiProject)
+	httpProject, err := gen.GenFromYapi(token, apiParam.allApi, apiParam.list)
+	if err != nil {
+		log.Fatalf("gen from yapi error, %v", err)
+	}
 
 	// dto generate
 	dtoStructs := api.ConvertProjectApisDtoDesc(httpProject.ApiList)
 
-	var content string
-	var err error
-
 	//write dto
-	content = util.GenerateFromTemplate("api/dto", map[string]any{
+	content, err = templateGen.GenerateTemplateByName("ApiDto", map[string]any{
 		"dtoList": dtoStructs,
 	}, map[string]any{
 		"ToCamelCaseFistLower": domain.ToCamelCaseFistLower,
 	})
+	if err != nil {
+		log.Fatalf("generate template error, %v", err)
+	}
 	err = util.WriteFile(fmt.Sprintf("%s/%s_dto.go", apiParam.dest, httpProject.Name), []byte(content))
 	if err != nil {
 		log.Fatalf("wirte dto file error, %v", err)
 	}
 
 	// write client
-	content = util.GenerateFromTemplate("api/client", map[string]any{
+	content, err = templateGen.GenerateTemplateByName("ApiClient", map[string]any{
 		"apiList":  httpProject.ApiList,
 		"basePath": httpProject.BasePath,
 		"name":     domain.ToCamelCaseFistLarge(httpProject.Name),
 	}, map[string]any{})
+	if err != nil {
+		log.Fatalf("generate template error, %v", err)
+	}
 	err = util.WriteFile(fmt.Sprintf("%s/%s_api.go", apiParam.dest, httpProject.Name), []byte(content))
 	if err != nil {
 		log.Fatalf("wirte client file error, %v", err)
@@ -89,13 +91,19 @@ func generateFromApi(token string) {
 
 	// cont service
 	for _, httpApi := range httpProject.ApiList {
-		content = util.GenerateFromTemplate("api/control", httpApi, map[string]any{})
+		content, err = templateGen.GenerateTemplateByName("ApiControl", httpApi, map[string]any{})
+		if err != nil {
+			log.Fatalf("generate template error, %v", err)
+		}
 		err = util.WriteFile(fmt.Sprintf("%s/%s_%s_controller.go", apiParam.dest, domain.ToSnakeLower(httpApi.Prefix), httpProject.Name), []byte(content))
 		if err != nil {
 			log.Fatalf("wirte file error, %v", err)
 		}
 
-		content = util.GenerateFromTemplate("api/service", httpApi, map[string]any{})
+		content, err = templateGen.GenerateTemplateByName("ApiService", httpApi, map[string]any{})
+		if err != nil {
+			log.Fatalf("generate template error, %v", err)
+		}
 		err = util.WriteFile(fmt.Sprintf("%s/%s_%s_service.go", apiParam.dest, domain.ToSnakeLower(httpApi.Prefix), httpProject.Name), []byte(content))
 		if err != nil {
 			log.Fatalf("wirte file error, %v", err)

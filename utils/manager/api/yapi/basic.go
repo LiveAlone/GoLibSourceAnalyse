@@ -1,96 +1,19 @@
 package yapi
 
 import (
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/http"
-	jsoniter "github.com/json-iterator/go"
-	"log"
-	"strconv"
-	"strings"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/model"
 )
 
-type YapiClient struct{}
+type ApiClient struct{}
 
-func (y *YapiClient) QueryProjectInfo(token string, apiIdList string) (*ProjectDetailInfo, error) {
-	projectBaseInfo := getProjectInfo(token)
-
-	var apiIds []string
-	if len(apiIdList) > 0 {
-		apiIds = strings.Split(strings.TrimSpace(apiIdList), ",")
-	} else {
-		page, size := 1, 20
-		for {
-			pageApiInfo := pageQueryApiInfo(token, projectBaseInfo.ID, page, size)
-			if len(pageApiInfo.List) == 0 {
-				break
-			}
-			for _, info := range pageApiInfo.List {
-				apiIds = append(apiIds, strconv.FormatInt(info.Id, 10))
-			}
-			page += 1
-		}
-	}
-
-	apiList := make([]*ApiInfo, 0, len(apiIds))
-	for _, apiId := range apiIds {
-		interfaceApiInfo := getInterfaceApi(token, apiId)
-		apiList = append(apiList, interfaceApiInfo)
-	}
-
-	if len(apiList) == 0 {
-		return nil, nil
-	}
-
-	return &ProjectDetailInfo{
-		ProjectInfo: projectBaseInfo,
-		ApiList:     apiList,
-	}, nil
+func NewApiClient() *ApiClient {
+	return &ApiClient{}
 }
 
-func ConvertJsonStructWrap(json string) (res *StructWrapper, err error) {
-	res = new(StructWrapper)
-	err = jsoniter.Unmarshal([]byte(json), res)
-	return
-}
-
-type PageApiInfo struct {
-	Count int        `json:"count"`
-	Total int        `json:"total"`
-	List  []*ApiInfo `json:"list"`
-}
-
-func getInterfaceApi(token, apiId string) *ApiInfo {
-	apiInfo := new(ApiInfo)
-	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/interface/get", map[string]string{
-		"token": token,
-		"id":    apiId,
-	}, apiInfo)
+func (y *ApiClient) QueryHttpProjectInfo(token string, apiIdList string) (*model.HttpProject, error) {
+	yapiProjectInfo, err := y.QueryYapiProjectInfo(token, apiIdList)
 	if err != nil {
-		log.Fatalf("single api info err:%v", err)
+		return nil, err
 	}
-	return apiInfo
-}
-
-func getProjectInfo(token string) *ProjectInfo {
-	projectBaseInfo := new(ProjectInfo)
-	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/project/get", map[string]string{
-		"token": token,
-	}, projectBaseInfo)
-	if err != nil {
-		log.Fatalf("gain basic project info error, casue:%v", err)
-	}
-	return projectBaseInfo
-}
-
-func pageQueryApiInfo(token string, projectId, page, size int) *PageApiInfo {
-	pageApiInfo := new(PageApiInfo)
-	err := http.NewWrapHttp(http.BaseWrap).GetRequest("https://yapi.zuoyebang.cc/api/interface/list", map[string]string{
-		"token":      token,
-		"project_id": strconv.Itoa(projectId),
-		"page":       strconv.Itoa(page),
-		"size":       strconv.Itoa(size),
-	}, pageApiInfo)
-	if err != nil {
-		log.Fatalf("page api info err:%v", err)
-	}
-	return pageApiInfo
+	return DetailToBasicModel(yapiProjectInfo), nil
 }

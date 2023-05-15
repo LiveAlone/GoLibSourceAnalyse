@@ -1,5 +1,4 @@
-// Package api api 接口模型
-package api
+package bo
 
 type HttpProject struct {
 	ID       int

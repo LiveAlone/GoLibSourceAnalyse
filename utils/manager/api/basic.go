@@ -1,25 +1,45 @@
 package api
 
 import (
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/bo"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api/yapi"
 	"log"
 )
 
-// SchemaGen 基于APISchema 生成code
-type SchemaGen struct {
+// SchemaApiGen 基于APISchema 生成code
+type SchemaApiGen struct {
+	yapiClient *yapi.ApiClient
 }
 
-func NewSchemaGen() *SchemaGen {
-	return &SchemaGen{}
+func NewSchemaGen(yapiClient *yapi.ApiClient) *SchemaApiGen {
+	return &SchemaApiGen{
+		yapiClient: yapiClient,
+	}
 }
 
 // GenFromYapi 通过生成code
-func (s *SchemaGen) GenFromYapi(token string, allApi bool, apiList []string) (rs map[string]string, err error) {
-	return nil, err
+func (s *SchemaApiGen) GenFromYapi(token string, allApi bool, apiList string) (httpProject *bo.HttpProject, err error) {
+	if allApi {
+		httpProject, err = s.yapiClient.QueryHttpProjectInfo(token, "")
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		httpProject, err = s.yapiClient.QueryHttpProjectInfo(token, apiList)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if httpProject == nil {
+		log.Fatalf("fail get project info, token:%v", token)
+	}
+	return
 }
 
-func ConvertProjectApisDtoDesc(apiList []*HttpApi) (rs []*DtoStructDesc) {
+func ConvertProjectApisDtoDesc(apiList []*bo.HttpApi) (rs []*bo.DtoStructDesc) {
 	for _, api := range apiList {
 		rs = append(rs, convertBodyDescToDtoDesc(api.Prefix, api.ReqBodyDesc)...)
 		rs = append(rs, convertBodyDescToDtoDesc(api.Prefix, api.ResBodyDesc)...)
@@ -27,17 +47,17 @@ func ConvertProjectApisDtoDesc(apiList []*HttpApi) (rs []*DtoStructDesc) {
 	return
 }
 
-func convertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDesc) {
+func convertBodyDescToDtoDesc(prefix string, desc *bo.BodyDesc) (rs []*bo.DtoStructDesc) {
 	if desc.Type != "object" {
 		log.Fatalf("dto desc convert error, body:%v", desc)
 	}
 
-	fields := make([]*DtoFieldDesc, 0)
+	fields := make([]*bo.DtoFieldDesc, 0)
 	for _, property := range desc.Properties {
 		if property.Type == "object" {
 			loopDesc := convertBodyDescToDtoDesc(prefix, property)
 			rs = append(rs, loopDesc...)
-			fields = append(fields, &DtoFieldDesc{
+			fields = append(fields, &bo.DtoFieldDesc{
 				Name:     domain.ToCamelCaseFistLarge(property.Name),
 				Type:     toStructName(prefix, property.Name),
 				Example:  property.Example,
@@ -46,7 +66,7 @@ func convertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDes
 				Array:    property.Array,
 			})
 		} else {
-			fields = append(fields, &DtoFieldDesc{
+			fields = append(fields, &bo.DtoFieldDesc{
 				Name:     domain.ToCamelCaseFistLarge(property.Name),
 				Type:     toStructType(property.Type),
 				Example:  property.Example,
@@ -57,7 +77,7 @@ func convertBodyDescToDtoDesc(prefix string, desc *BodyDesc) (rs []*DtoStructDes
 		}
 	}
 
-	rs = append(rs, &DtoStructDesc{
+	rs = append(rs, &bo.DtoStructDesc{
 		Name:         toStructName(prefix, desc.Name),
 		Example:      desc.Example,
 		Desc:         desc.Desc,

@@ -1,8 +1,4 @@
-package template
-
-type HelloTemplate struct {
-	Hello string `json:"hello" form:"hello"`
-}
+package bo
 
 // ModelStruct template/model 模型
 type ModelStruct struct {

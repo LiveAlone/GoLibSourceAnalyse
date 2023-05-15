@@ -4,6 +4,7 @@ import (
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/template"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api/yapi"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/model"
 )
 
@@ -25,7 +26,10 @@ func AppConstruct() []interface{} {
 	depConstruct = append(depConstruct, model.NewSchemaInformationGen)
 
 	// api gen
-	depConstruct = append(depConstruct, api.NewSchemaGen)
+	depConstruct = append(depConstruct,
+		api.NewSchemaGen,
+		yapi.NewApiClient, // yapi api client
+	)
 
 	return depConstruct
 }

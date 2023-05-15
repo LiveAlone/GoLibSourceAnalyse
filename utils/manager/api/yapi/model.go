@@ -11,6 +11,12 @@ type ProjectInfo struct {
 	Basepath string `json:"basepath"` // /brick
 }
 
+type PageApiInfo struct {
+	Count int        `json:"count"`
+	Total int        `json:"total"`
+	List  []*ApiInfo `json:"list"`
+}
+
 type ApiInfo struct {
 	Id           int64           `json:"_id"`
 	Method       string          `json:"method"`
@@ -22,19 +28,11 @@ type ApiInfo struct {
 	ResBodyType  string          `json:"res_body_type"` // POST
 	ResBody      string          `json:"res_body"`
 }
+
 type ReqQueryItem struct {
 	Id       string `json:"_id"`
 	Name     string `json:"name"`
 	Example  string `json:"example"`
 	Desc     string `json:"desc"`
 	Required string `json:"required"`
-}
-
-// StructWrapper type(object, array, 基础类型)
-type StructWrapper struct {
-	Type        string                    `json:"type"`
-	Properties  map[string]*StructWrapper `json:"properties"`
-	Required    []string                  `json:"required"`
-	Items       *StructWrapper            `json:"items"`
-	Description string                    `json:"description"`
 }
