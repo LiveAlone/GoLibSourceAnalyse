@@ -14,3 +14,8 @@ type ModelField struct {
 	FieldType  string // 结构体数据类型
 	Comment    string // 字段评论
 }
+
+// IndexField 索引描述信息
+type IndexField struct {
+	// todo yqj
+}

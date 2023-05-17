@@ -2,6 +2,7 @@ package util
 
 import (
 	"bufio"
+	"errors"
 	"os"
 )
 
@@ -35,4 +36,20 @@ func WriteFileLines(path string, lines []string) error {
 
 func WriteFile(filePath string, data []byte) error {
 	return os.WriteFile(filePath, data, 0644)
+}
+
+func CreateDirIfNotExists(dirPath string) error {
+	fileInfo, err := os.Stat(dirPath)
+	if os.IsNotExist(err) {
+		// 创建文件
+		return os.Mkdir(dirPath, 0755)
+	}
+
+	if err != nil {
+		return err
+	}
+	if fileInfo.IsDir() {
+		return nil
+	}
+	return errors.New("file exists but not dir")
 }

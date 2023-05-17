@@ -37,7 +37,12 @@ func NewModelCmd(configLoader *config.Loader, gen *db.SchemaInformationGen) *cob
 			}
 			for tableName, code := range tableCode {
 				fileName := domain.ToSnakeLower(strings.TrimPrefix(tableName, "tbl"))
-				err = util.WriteFile(fmt.Sprintf("%s/%s.go", targetPath, fileName), []byte(code))
+				dir := fmt.Sprintf("%s/model", targetPath)
+				err := util.CreateDirIfNotExists(dir)
+				if err != nil {
+					log.Fatalf("create dir error, err :%v", err)
+				}
+				err = util.WriteFile(fmt.Sprintf("%s/%s.go", dir, fileName), []byte(code))
 				if err != nil {
 					log.Fatalf("tb file write error, err :%v", err)
 				}
