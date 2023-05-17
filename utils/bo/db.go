@@ -2,10 +2,10 @@ package bo
 
 // ModelStruct template/model 模型
 type ModelStruct struct {
-	TableName string
-	BeanName  string
-	Columns   []*ModelField
-	Comment   string // todo yqj 数据表注释
+	TableName string        // tblModelTable
+	BeanName  string        // ModelTable
+	Columns   []*ModelField // 字段列表
+	Comment   string        // 数据表注释
 }
 
 // ModelField 实体对象类型
@@ -15,7 +15,21 @@ type ModelField struct {
 	Comment    string // 字段评论
 }
 
-// IndexField 索引描述信息
-type IndexField struct {
-	// todo yqj
+// DataStruct template/data 数据模型
+type DataStruct struct {
+	BeanName  string // ModelTable
+	DataIndex []*DataIndex
+}
+
+type DataIndex struct {
+	IndexName    string
+	Unique       bool
+	Fields       []*DataIndexField
+	IndexComment string
+}
+
+type DataIndexField struct {
+	Index      int    // 位置
+	ColumnName string // db 字段名称
+	FieldType  string // 结构体数据类型
 }

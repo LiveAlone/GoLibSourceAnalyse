@@ -13,11 +13,14 @@ import (
 
 var structNameTemplateMap = map[string]string{
 	"HelloTemplate": "hello",
-	"ModelStruct":   "model/flow",
-	"ApiDto":        "api/dto",
-	"ApiClient":     "api/client",
-	"ApiControl":    "api/control",
-	"ApiService":    "api/service",
+	//"ModelStruct":   "model/flow",
+	"ModelStruct": "model/basic",
+	"DataStruct":  "model/data",
+
+	"ApiDto":     "api/dto",
+	"ApiClient":  "api/client",
+	"ApiControl": "api/control",
+	"ApiService": "api/service",
 }
 
 // Generator 模版生成器
