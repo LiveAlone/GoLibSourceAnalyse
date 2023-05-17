@@ -1,7 +1,19 @@
 package data
 
 import (
-	"apps/models"
-
 	"github.com/gin-gonic/gin"
 )
+
+type {{.BeanName}}Data struct {
+	ctx           *gin.Context
+	{{.BeanName | ToCamelCaseFistLower}}Dao *models.{{.BeanName}}Dao
+}
+
+func New{{.BeanName}}Data(ctx *gin.Context) *{{.BeanName}}Data {
+	return &{{.BeanName}}Data{
+		ctx:           ctx,
+		{{.BeanName | ToCamelCaseFistLower}}Dao: models.New{{.BeanName}}Dao(ctx),
+	}
+}
+
+// todo function
