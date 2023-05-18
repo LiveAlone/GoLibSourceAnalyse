@@ -2,7 +2,6 @@ package db
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/bo"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
@@ -102,7 +101,7 @@ func buildDataStruct(table *mysql.TableInfo, indexList []*mysql.TableStatistics,
 
 		fieldType, ok := config.GlobalConf.DbTypeMap[columnDataTypeMap[statistics.ColumnName]]
 		if !ok {
-			return nil, errors.New(fmt.Sprintf("column data type not found %s", statistics.ColumnName))
+			return nil, fmt.Errorf("column data type not found %s", statistics.ColumnName)
 		}
 		dataIndex.Fields = append(dataIndex.Fields, &bo.DataIndexField{
 			Index:      statistics.SeqInIndex,

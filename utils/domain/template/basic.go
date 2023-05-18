@@ -4,7 +4,6 @@ package template
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -33,7 +32,7 @@ func NewGenerator() *Generator {
 func (g *Generator) GenerateTemplateByName(templateName string, data any, funcMap template.FuncMap) (string, error) {
 	templatePath, ok := structNameTemplateMap[templateName]
 	if !ok {
-		return "", errors.New(fmt.Sprintf("template not found, struct:%s", templateName))
+		return "", fmt.Errorf("template not found, struct:%s", templateName)
 	}
 
 	filePath := fmt.Sprintf("conf/template/%s.template", templatePath)
@@ -65,12 +64,12 @@ func (g *Generator) GenerateTemplateContent(data any, funcMap template.FuncMap) 
 	case reflect.Struct:
 		dataStructName = dataType.Name()
 	default:
-		return "", errors.New(fmt.Sprintf("data type not support, type:%v", dataType.Kind()))
+		return "", fmt.Errorf("data type not support, type:%v", dataType.Kind())
 	}
 
 	templatePath, ok := structNameTemplateMap[dataStructName]
 	if !ok {
-		return "", errors.New(fmt.Sprintf("template not found, struct:%s", dataStructName))
+		return "", fmt.Errorf("template not found, struct:%s", dataStructName)
 	}
 
 	filePath := fmt.Sprintf("conf/template/%s.template", templatePath)

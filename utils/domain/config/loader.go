@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"os"
@@ -19,7 +18,7 @@ func NewConfigLoader() *Loader {
 func (l *Loader) LoadConfigToEntity(path string, entity any) error {
 	paths := strings.Split(path, ".")
 	if !supportFile(paths[len(paths)-1]) {
-		return errors.New(fmt.Sprintf("not support file type %s", path))
+		return fmt.Errorf("not support file type %s", path)
 	}
 
 	confContent, err := os.ReadFile(path)
