@@ -61,6 +61,9 @@ func generateFromApi(token string, gen *api.SchemaApiGen, templateGen *template.
 	// dto generate
 	dtoStructs := api.ConvertProjectApisDtoDesc(httpProject.ApiList)
 
+	destBase := fmt.Sprintf("%s/api", apiParam.dest)
+	_ = util.CreateDirIfNotExists(destBase)
+
 	//write dto
 	content, err = templateGen.GenerateTemplateByName("ApiDto", map[string]any{
 		"dtoList": dtoStructs,
@@ -70,7 +73,7 @@ func generateFromApi(token string, gen *api.SchemaApiGen, templateGen *template.
 	if err != nil {
 		log.Fatalf("generate template error, %v", err)
 	}
-	err = util.WriteFile(fmt.Sprintf("%s/%s_dto.go", apiParam.dest, httpProject.Name), []byte(content))
+	err = util.WriteFile(fmt.Sprintf("%s/%s_dto.go", destBase, httpProject.Name), []byte(content))
 	if err != nil {
 		log.Fatalf("wirte dto file error, %v", err)
 	}
@@ -84,7 +87,7 @@ func generateFromApi(token string, gen *api.SchemaApiGen, templateGen *template.
 	if err != nil {
 		log.Fatalf("generate template error, %v", err)
 	}
-	err = util.WriteFile(fmt.Sprintf("%s/%s_api.go", apiParam.dest, httpProject.Name), []byte(content))
+	err = util.WriteFile(fmt.Sprintf("%s/%s_api.go", destBase, httpProject.Name), []byte(content))
 	if err != nil {
 		log.Fatalf("wirte client file error, %v", err)
 	}
@@ -95,7 +98,7 @@ func generateFromApi(token string, gen *api.SchemaApiGen, templateGen *template.
 		if err != nil {
 			log.Fatalf("generate template error, %v", err)
 		}
-		err = util.WriteFile(fmt.Sprintf("%s/%s_%s_controller.go", apiParam.dest, domain.ToSnakeLower(httpApi.Prefix), httpProject.Name), []byte(content))
+		err = util.WriteFile(fmt.Sprintf("%s/%s_%s_controller.go", destBase, domain.ToSnakeLower(httpApi.Prefix), httpProject.Name), []byte(content))
 		if err != nil {
 			log.Fatalf("wirte file error, %v", err)
 		}
@@ -104,7 +107,7 @@ func generateFromApi(token string, gen *api.SchemaApiGen, templateGen *template.
 		if err != nil {
 			log.Fatalf("generate template error, %v", err)
 		}
-		err = util.WriteFile(fmt.Sprintf("%s/%s_%s_service.go", apiParam.dest, domain.ToSnakeLower(httpApi.Prefix), httpProject.Name), []byte(content))
+		err = util.WriteFile(fmt.Sprintf("%s/%s_%s_service.go", destBase, domain.ToSnakeLower(httpApi.Prefix), httpProject.Name), []byte(content))
 		if err != nil {
 			log.Fatalf("wirte file error, %v", err)
 		}
