@@ -35,4 +35,4 @@ go mod init
 
 11. gopatch 代码格式化工具 [git](https://github.com/uber-go/gopatch)
 
-
+12. goday 通过 import分析当前项目模块依赖
