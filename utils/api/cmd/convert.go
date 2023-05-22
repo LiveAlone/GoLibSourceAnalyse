@@ -14,6 +14,12 @@ type FileConvertParam struct {
 
 var fileConvertParam = new(FileConvertParam)
 
+// 1. list 选择任务taskId 列表
+// 2. source 定义依赖来源， 任务分类管理。 工作注解方式，注入判断。
+// 3. func 数据组装合并展示结果。
+// 4. fmt, excel, file等等。
+
+// NewFileConvertCmd 文件行转换
 func NewFileConvertCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "convert",

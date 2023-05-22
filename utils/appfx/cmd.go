@@ -1,7 +1,7 @@
 package appfx
 
 import (
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/cmd"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/api/cmd"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )
@@ -15,9 +15,9 @@ var SubCmdList = []interface{}{
 }
 
 func SubCmdConstructList() (rs []any) {
-	for _, cmd := range SubCmdList {
+	for _, v := range SubCmdList {
 		rs = append(rs, fx.Annotate(
-			cmd,
+			v,
 			fx.ResultTags(`group:"subCmd"`),
 		))
 	}
