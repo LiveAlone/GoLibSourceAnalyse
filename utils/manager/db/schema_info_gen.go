@@ -3,14 +3,17 @@ package db
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"sort"
+	"strings"
+
+	jsoniter "github.com/json-iterator/go"
+
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/bo"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/mysql"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/template"
-	"log"
-	"sort"
-	"strings"
 )
 
 // SchemaInformationGen 基于SchemaInformation生成代码
@@ -72,7 +75,7 @@ func (s *SchemaInformationGen) genData(table *mysql.TableInfo, indexList []*mysq
 	if err != nil {
 		return "", err
 	}
-	jc, _ := json.Marshal(ds)
+	jc, _ := jsoniter.MarshalIndent(ds, "", "  ")
 	fmt.Println("数据结构: ", string(jc))
 	return s.tempGenerator.GenerateTemplateContent(ds, map[string]any{
 		"ToCamelCaseFistLarge": domain.ToCamelCaseFistLarge,
@@ -129,7 +132,7 @@ func (s *SchemaInformationGen) genModel(table *mysql.TableInfo, columns []*mysql
 	if err != nil {
 		return "", err
 	}
-	ds, _ := json.Marshal(ms)
+	ds, _ := json.MarshalIndent(ms, "", "  ")
 	fmt.Println("模型结构: ", string(ds))
 	return s.tempGenerator.GenerateTemplateContent(ms, map[string]any{
 		"ToCamelCaseFistLarge": domain.ToCamelCaseFistLarge,
