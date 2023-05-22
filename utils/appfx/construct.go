@@ -3,9 +3,9 @@ package appfx
 import (
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/template"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api/yapi"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/db"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/service/api"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/service/api/yapi"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/service/db"
 )
 
 func AppConstruct() []interface{} {

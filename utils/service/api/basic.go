@@ -1,11 +1,12 @@
 package api
 
 import (
+	"log"
+
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/bo"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api/yapi"
-	"log"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/service/api/yapi"
 )
 
 // SchemaApiGen 基于APISchema 生成code

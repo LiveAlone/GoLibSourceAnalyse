@@ -2,13 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/template"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/api"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/service/api"
 	"github.com/LiveAlone/GoLibSourceAnalyse/utils/util"
 	"github.com/spf13/cobra"
-	"log"
 )
 
 type ApiParam struct {

@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
-	"github.com/LiveAlone/GoLibSourceAnalyse/utils/manager/db"
 	"log"
 	"strings"
+
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/domain/config"
+	"github.com/LiveAlone/GoLibSourceAnalyse/utils/service/db"
 
 	"github.com/spf13/cobra"
 
