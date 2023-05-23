@@ -1,5 +1,10 @@
+pkg_name=.
+pkg_path=/Users/zyb/workspace/zyb/trans
+depth=1
+dot_file=godag.dot
+
 gen:
-	go run main.go --pkg_name=github.com/LiveAlone/GoLibSourceAnalyse/utils --pkg_path=/Users/zyb/workspace/person/GitHub/GoLibSourceAnalyse/utils --depth=2 --dot_file_path=godag.dot
+	go run main.go --pkg_name=$(pkg_name) --pkg_path=$(pkg_path) --depth=$(depth) --dot_file_path=$(dot_file)
 
 png:
-	dot -Tpng godag.dot > godag.png
+	dot -Tpng $(dot_file) > godag.png
