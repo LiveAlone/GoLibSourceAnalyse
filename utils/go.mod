@@ -7,6 +7,8 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/spf13/cobra v1.6.1
 	github.com/tealeg/xlsx v1.0.5
+	go.uber.org/fx v1.19.3
+	go.uber.org/zap v1.23.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.4.4
 	gorm.io/gorm v1.24.2
@@ -22,8 +24,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/dig v1.16.1 // indirect
-	go.uber.org/fx v1.19.3 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.23.0 // indirect
 	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
 )
