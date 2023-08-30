@@ -1,5 +1,8 @@
 # 工具项目开发支持
 
+# 项目已经删除进入独立开发项目
+[go-utils](https://github.com/LiveAlone/go-util)
+
 ### fx 做依赖管理
 1. logger ```DEBUG``` 输出应用级别日志
 
